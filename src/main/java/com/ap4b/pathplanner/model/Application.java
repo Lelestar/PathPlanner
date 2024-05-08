@@ -4,7 +4,7 @@ import java.util.Vector;
 
 public class Application {
     // Constants
-    private final String ImagesPath = "data/img/";
+    private final String ImagesPath = "/com/ap4b/pathplanner/img/";
 
     private final String mapLink;
 

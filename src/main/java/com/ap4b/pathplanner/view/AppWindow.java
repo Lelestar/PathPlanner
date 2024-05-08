@@ -27,10 +27,16 @@ public class AppWindow {
 
         // Create map
         Map map = new Map(app.getMapLink());
+        content.setCenter(map);
 
         // Additional setup can be performed here, such as adding status bars, other panels, etc.
     }
 
+    /**
+     * Get the main content pane of this window.
+     *
+     * @return the main content pane of this application window.
+     */
     public BorderPane getContent() {
         return content;
     }

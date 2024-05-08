@@ -1,23 +1,28 @@
 package com.ap4b.pathplanner.view;
 
+import javafx.application.Platform;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-
-import java.io.InputStream;
-import java.util.Objects;
+import java.net.URI;
+import java.net.URL;
 import java.util.Vector;
 import javafx.geometry.Point2D;
+import javafx.scene.transform.Scale;
 
 /**
  * The Class Map in JavaFX.
  */
-public class Map extends Canvas {
+public class Map extends Pane {
 
     private Image mapImage;
+    private Canvas canvas;
+    private ScrollPane scrollPane;
     private Vector<Point2D> itinerary = new Vector<>();
 
     private final Color START_COLOR = Color.GREEN;
@@ -29,27 +34,43 @@ public class Map extends Canvas {
     private final int POINT_SIZE = 20;
 
     /**
-     * Instantiates a new map.
+     * Constructs a Map instance with the specified image path.
      *
-     * @param imgPath the image path
+     * @param imgPath the path to the map image resource
      */
     public Map(String imgPath) {
-        super();
+        scrollPane = new ScrollPane();
+        canvas = new Canvas();
+
         try {
-            InputStream is = Objects.requireNonNull(getClass().getResourceAsStream(imgPath), "Resource not found: " + imgPath);
-            mapImage = new Image(is.toString(), true);  // true = background loading
+            URL resource = getClass().getResource(imgPath);
+            if (resource == null) {
+                throw new RuntimeException("Resource URL not found for: " + imgPath);
+            }
+            URI ressourceURI = resource.toURI();
+            mapImage = new Image(ressourceURI.toString(), true);
+
             mapImage.progressProperty().addListener((obs, oldVal, newVal) -> {
-                if (newVal.doubleValue() == 1.0) {
-                    setWidth(mapImage.getWidth());
-                    setHeight(mapImage.getHeight());
-                    draw();  // Only draw when image is fully loaded
+                if (newVal.doubleValue() == 1.0 && !mapImage.isError()) {
+                    System.out.println("Map image loaded: " + mapImage.getWidth() + "x" + mapImage.getHeight());
+                    canvas.setWidth(mapImage.getWidth());
+                    canvas.setHeight(mapImage.getHeight());
+                    scrollPane.setContent(canvas);
+                    scrollPane.setPannable(true);
+                    scrollPane.setPrefSize(1800, 775); // Set preferred size to enable scroll bars when content is larger than the view
+                    scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+                    scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+                    draw();
+                    this.getChildren().add(scrollPane);
                 }
             });
+
             mapImage.exceptionProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue != null) {
                     throw new RuntimeException("Failed to load map image: " + newValue.getMessage(), newValue);
                 }
             });
+
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to initialize map.", e);
@@ -60,22 +81,21 @@ public class Map extends Canvas {
     /**
      * Update zoom.
      *
-     * @param zoom the zoom level
+     * @param zoomFactor the zoom factor
      */
-    public void updateZoom(double zoom) {
-        setScaleX(zoom);
-        setScaleY(zoom);
+    public void updateZoom(double zoomFactor) {
+        Scale newScale = new Scale(zoomFactor, zoomFactor);
+        canvas.getTransforms().clear();
+        canvas.getTransforms().add(newScale);
     }
 
     /**
      * Draw the map and the itinerary.
      */
     public void draw() {
-        GraphicsContext gc = getGraphicsContext2D();
+        GraphicsContext gc = canvas.getGraphicsContext2D();
         clear(gc);
-
-        // Draw the map image
-        gc.drawImage(mapImage, 0, 0);
+        gc.drawImage(mapImage, 0, 0, canvas.getWidth(), canvas.getHeight());
 
         // Draw itinerary
         if (itinerary.size() > 1) {
