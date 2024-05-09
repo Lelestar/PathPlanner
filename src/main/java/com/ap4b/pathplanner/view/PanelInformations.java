@@ -31,7 +31,7 @@ public class PanelInformations extends VBox {
 
         // Information List
         listInfos = new ListView<>();
-        listInfos.setPrefSize(width, 300);
+        listInfos.setPrefSize(width, 200);
         getChildren().add(listInfos);
 
         // Route Sheet Label
@@ -41,7 +41,7 @@ public class PanelInformations extends VBox {
 
         // Route Sheet List
         listRouteSheet = new ListView<>();
-        listRouteSheet.setPrefSize(width, height - 350); // Adjust height as needed
+        listRouteSheet.setPrefSize(width, height - 100);
         getChildren().add(listRouteSheet);
 
         initializeDefaultMessages(unitsSystem);

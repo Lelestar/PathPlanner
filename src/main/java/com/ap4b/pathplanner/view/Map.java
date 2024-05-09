@@ -1,6 +1,5 @@
 package com.ap4b.pathplanner.view;
 
-import javafx.application.Platform;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ScrollPane;
@@ -52,12 +51,10 @@ public class Map extends Pane {
 
             mapImage.progressProperty().addListener((obs, oldVal, newVal) -> {
                 if (newVal.doubleValue() == 1.0 && !mapImage.isError()) {
-                    System.out.println("Map image loaded: " + mapImage.getWidth() + "x" + mapImage.getHeight());
                     canvas.setWidth(mapImage.getWidth());
                     canvas.setHeight(mapImage.getHeight());
                     scrollPane.setContent(canvas);
                     scrollPane.setPannable(true);
-                    scrollPane.setPrefSize(1800, 775); // Set preferred size to enable scroll bars when content is larger than the view
                     scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
                     scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
                     draw();
@@ -139,6 +136,10 @@ public class Map extends Pane {
      */
     private void clear(GraphicsContext gc) {
         gc.clearRect(0, 0, getWidth(), getHeight());
+    }
+
+    public ScrollPane getScrollPane() {
+        return scrollPane;
     }
 }
 

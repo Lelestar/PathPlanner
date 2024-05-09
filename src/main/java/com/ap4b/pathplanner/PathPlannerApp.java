@@ -19,7 +19,7 @@ public class PathPlannerApp extends javafx.application.Application {
     @Override
     public void start(Stage primaryStage) {
         // Set up the main window (View)
-        AppWindow appWindow = new AppWindow(app);
+        AppWindow appWindow = new AppWindow(app, primaryStage);
         Scene scene = new Scene(appWindow.getContent(), 1200, 700);
         primaryStage.setTitle("Path Planner");
         primaryStage.setScene(scene);
