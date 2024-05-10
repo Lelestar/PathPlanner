@@ -9,6 +9,7 @@ public class PathPlannerApp extends javafx.application.Application {
 
     private final static String DATA_PATH = "/com/ap4b/pathplanner/data/";
     private Application app;
+    private AppWindow appWindow;
 
     @Override
     public void init() {
@@ -19,7 +20,8 @@ public class PathPlannerApp extends javafx.application.Application {
     @Override
     public void start(Stage primaryStage) {
         // Set up the main window (View)
-        AppWindow appWindow = new AppWindow(app, primaryStage);
+        appWindow = new AppWindow(app, primaryStage);
+        app.setAppWindow(appWindow); // Set the AppWindow in the model
         Scene scene = new Scene(appWindow.getContent(), 1200, 700);
         primaryStage.setTitle("Path Planner");
         primaryStage.setScene(scene);

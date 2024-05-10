@@ -6,6 +6,7 @@ import javafx.geometry.Pos;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 /**
@@ -15,6 +16,7 @@ public class AppWindow {
     private BorderPane content;
     private Application app;
     private Stage primaryStage;
+    private DepartureArrivalPanel departureArrivalPanel;
     private MenuController menuController;
 
     private final int INFO_PANEL_WIDTH = 250;
@@ -45,15 +47,21 @@ public class AppWindow {
         mapContainer.setBottom(zoomControl);
         content.setCenter(mapContainer);
 
-        // Create PanelInformations
+        // Create DepartureArrivalPanel and PanelInformations
+        VBox rightPanel = new VBox();
         PanelInformations panelInformations = new PanelInformations(INFO_PANEL_WIDTH, primaryStage.getHeight(), "metric");
-        BorderPane.setMargin(panelInformations, new javafx.geometry.Insets(0, 0, 0, 10));
-        content.setRight(panelInformations);
+        departureArrivalPanel = new DepartureArrivalPanel();
+        VBox.setMargin(departureArrivalPanel, new javafx.geometry.Insets(0, 0, 0, 10));
+
+        // Add both panels to the VBox
+        rightPanel.getChildren().addAll(departureArrivalPanel, panelInformations);
+        VBox.setVgrow(departureArrivalPanel, Priority.NEVER);
+        VBox.setVgrow(panelInformations, Priority.ALWAYS);
+        content.setRight(rightPanel);
 
         // Bind the size of the map and panelInformations to the size of the primaryStage
         map.getScrollPane().prefWidthProperty().bind(primaryStage.widthProperty().subtract(INFO_PANEL_WIDTH + SPACE_BETWEEN_MAP_AND_PANEL));
         map.getScrollPane().prefHeightProperty().bind(primaryStage.heightProperty().subtract(63));
-        panelInformations.prefHeightProperty().bind(primaryStage.heightProperty());
     }
 
     /**
@@ -63,5 +71,9 @@ public class AppWindow {
      */
     public BorderPane getContent() {
         return content;
+    }
+
+    public DepartureArrivalPanel getDepartureArrivalPanel() {
+        return departureArrivalPanel;
     }
 }
