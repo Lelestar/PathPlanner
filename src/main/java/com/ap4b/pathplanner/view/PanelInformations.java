@@ -2,6 +2,7 @@ package com.ap4b.pathplanner.view;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -31,7 +32,8 @@ public class PanelInformations extends VBox {
 
         // Information List
         listInfos = new ListView<>();
-        listInfos.setPrefSize(width, 200);
+        listInfos.setPrefSize(width, 150);
+        listInfos.setMinHeight(150);
         getChildren().add(listInfos);
 
         // Route Sheet Label
@@ -41,8 +43,9 @@ public class PanelInformations extends VBox {
 
         // Route Sheet List
         listRouteSheet = new ListView<>();
-        listRouteSheet.setPrefSize(width, height - 100);
+        listRouteSheet.setPrefWidth(width);
         getChildren().add(listRouteSheet);
+        VBox.setVgrow(listRouteSheet, Priority.ALWAYS);
 
         initializeDefaultMessages(unitsSystem);
     }
@@ -53,6 +56,8 @@ public class PanelInformations extends VBox {
                 "Choose an itinerary.",
                 "System of units: " + unitsSystem
         );
+
+        listRouteSheet.getItems().add("No route selected.");
     }
 
     public void addRoute(String route) {

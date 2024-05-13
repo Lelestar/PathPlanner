@@ -41,10 +41,10 @@ public class DepartureArrivalPanel extends HBox {
 
         // Define column constraints: one column for labels, one for comboboxes
         ColumnConstraints labelColumn = new ColumnConstraints();
-        labelColumn.setPercentWidth(40);  // 40% width for labels
+        labelColumn.setMaxWidth(100);
 
         ColumnConstraints comboBoxColumn = new ColumnConstraints();
-        comboBoxColumn.setPercentWidth(70);  // 70% width for ComboBoxes
+        comboBoxColumn.setMaxWidth(210);
 
         grid.getColumnConstraints().addAll(labelColumn, comboBoxColumn);
 
@@ -61,7 +61,8 @@ public class DepartureArrivalPanel extends HBox {
         grid.addRow(7, new Label("Point"), cbPointArrival);
 
         // Add go button
-        grid.add(btnGo, 1, 8, 2, 1);
+        grid.add(btnGo, 0, 8, 2, 1);
+        btnGo.setMaxWidth(Double.MAX_VALUE);
 
         this.getChildren().add(grid);
     }
