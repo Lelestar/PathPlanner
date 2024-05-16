@@ -1,5 +1,6 @@
 package com.ap4b.pathplanner.view;
 
+import com.ap4b.pathplanner.controller.DepartureArrivalPanelController;
 import com.ap4b.pathplanner.controller.MenuController;
 import com.ap4b.pathplanner.model.Application;
 import javafx.geometry.Pos;
@@ -18,6 +19,7 @@ public class AppWindow {
     private Stage primaryStage;
     private DepartureArrivalPanel departureArrivalPanel;
     private MenuController menuController;
+    private DepartureArrivalPanelController departureArrivalPanelController;
 
     private final int INFO_PANEL_WIDTH = 250;
     private final int SPACE_BETWEEN_MAP_AND_PANEL = 35;
@@ -52,6 +54,7 @@ public class AppWindow {
         PanelInformations panelInformations = new PanelInformations(INFO_PANEL_WIDTH, primaryStage.getHeight(), "metric");
         departureArrivalPanel = new DepartureArrivalPanel();
         VBox.setMargin(departureArrivalPanel, new javafx.geometry.Insets(0, 0, 0, 10));
+        departureArrivalPanelController = new DepartureArrivalPanelController(app, departureArrivalPanel);
 
         // Add both panels to the VBox
         rightPanel.getChildren().addAll(departureArrivalPanel, panelInformations);

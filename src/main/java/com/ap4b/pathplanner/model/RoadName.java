@@ -8,7 +8,6 @@ import java.util.regex.Pattern;
  * departmental road, European road, or a city name.
  */
 public class RoadName {
-
     /** Road name */
     private String name;
 

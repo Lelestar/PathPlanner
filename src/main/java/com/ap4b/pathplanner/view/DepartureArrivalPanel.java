@@ -16,6 +16,12 @@ public class DepartureArrivalPanel extends HBox {
     private ComboBox<String> cbPointDeparture, cbPointArrival;
     private Button btnGo;
 
+    public enum Direction {
+        DEPARTURE,
+        ARRIVAL,
+        BOTH
+    }
+
     public DepartureArrivalPanel() {
         setPadding(new Insets(10, 10, 10, 0));
         setSpacing(10);
@@ -68,11 +74,108 @@ public class DepartureArrivalPanel extends HBox {
     }
 
     public void addCity(String city) {
+        if (cbCityDeparture.getItems().contains(city)) {
+            return;
+        }
         cbCityDeparture.getItems().add(city);
         cbCityArrival.getItems().add(city);
     }
 
-    public boolean isCityAlreadyAdded(String city) {
-        return cbCityDeparture.getItems().contains(city);
+    public void addStreet(String street, Direction direction) {
+        if (direction == Direction.DEPARTURE) {
+            if (cbStreetDeparture.getItems().contains(street)) {
+                return;
+            }
+            cbStreetDeparture.getItems().add(street);
+        } else if (direction == Direction.ARRIVAL) {
+            if (cbStreetArrival.getItems().contains(street)) {
+                return;
+            }
+            cbStreetArrival.getItems().add(street);
+        } else {
+            if (cbStreetDeparture.getItems().contains(street) || cbStreetArrival.getItems().contains(street)) {
+                return;
+            }
+            cbStreetDeparture.getItems().add(street);
+            cbStreetArrival.getItems().add(street);
+        }
+    }
+
+    public void addPoint(Integer point, Direction direction) {
+        if (direction == Direction.DEPARTURE) {
+            if (cbPointDeparture.getItems().contains(point.toString())) {
+                return;
+            }
+            cbPointDeparture.getItems().add(point.toString());
+        } else if (direction == Direction.ARRIVAL) {
+            if (cbPointArrival.getItems().contains(point.toString())) {
+                return;
+            }
+            cbPointArrival.getItems().add(point.toString());
+        } else {
+            if (cbPointDeparture.getItems().contains(point.toString()) || cbPointArrival.getItems().contains(point.toString())) {
+                return;
+            }
+            cbPointDeparture.getItems().add(point.toString());
+            cbPointArrival.getItems().add(point.toString());
+        }
+    }
+
+    public String getSelectedStreet(Direction direction) {
+        if (direction == Direction.DEPARTURE) {
+            return cbStreetDeparture.getSelectionModel().getSelectedItem();
+        } else if (direction == Direction.ARRIVAL) {
+            return cbStreetArrival.getSelectionModel().getSelectedItem();
+        } else {
+            return null;
+        }
+    }
+
+    public void resetStreets(Direction direction) {
+        if (direction == Direction.DEPARTURE) {
+            cbStreetDeparture.getItems().clear();
+        } else if (direction == Direction.ARRIVAL) {
+            cbStreetArrival.getItems().clear();
+        }
+    }
+
+    public int getPointNumber(Direction direction) {
+        if (cbPointDeparture.getSelectionModel().getSelectedItem() == null || cbPointArrival.getSelectionModel().getSelectedItem() == null) {
+            return -1;
+        } else if (direction == Direction.DEPARTURE) {
+            return Integer.parseInt(cbPointDeparture.getSelectionModel().getSelectedItem());
+        } else if (direction == Direction.ARRIVAL) {
+            return Integer.parseInt(cbPointArrival.getSelectionModel().getSelectedItem());
+        } else {
+            return -1;
+        }
+    }
+
+    public ComboBox<String> getCbCityDeparture() {
+        return cbCityDeparture;
+    }
+
+    public ComboBox<String> getCbCityArrival() {
+        return cbCityArrival;
+    }
+
+    public ComboBox<String> getCbStreetDeparture() {
+        return cbStreetDeparture;
+    }
+
+    public ComboBox<String> getCbStreetArrival() {
+        return cbStreetArrival;
+    }
+
+    public ComboBox<String> getCbPointDeparture() {
+        return cbPointDeparture;
+    }
+
+    public ComboBox<String> getCbPointArrival() {
+        return cbPointArrival;
+    }
+
+    public Button getGoButton() {
+        return btnGo;
     }
 }

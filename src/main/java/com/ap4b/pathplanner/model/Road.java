@@ -7,6 +7,7 @@ import java.util.Vector;
  * Represents a road consisting of a series of connected points.
  */
 public class Road {
+
     /** Direction of the road, can denote one-way or two-way. */
     private int direction;
 
