@@ -1,11 +1,14 @@
 package com.ap4b.pathplanner.model;
 
+import java.util.Vector;
+
 /**
  * A simple class to represent a point in a two-dimensional space.
  */
 public class Point {
     private int x;
     private int y;
+    private Vector<String> infos;
 
     /**
      * Constructs and initializes a point at the specified (x,y) location.
@@ -52,6 +55,23 @@ public class Point {
      */
     public void setY(int y) {
         this.y = y;
+    }
+
+    public void setInfos(Vector<String> infos) {
+    	this.infos = infos;
+    }
+
+    public Vector<String> getInfos() {
+    	return infos;
+    }
+
+    /**
+     * Returns the distance between this point and the specified point.
+     *
+     * @param point the point to calculate the distance to
+     */
+    public double distance(Point point) {
+        return Math.sqrt(Math.pow(point.x - x, 2) + Math.pow(point.y - y, 2));
     }
 
     /**

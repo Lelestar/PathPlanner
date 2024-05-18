@@ -1,5 +1,6 @@
 package com.ap4b.pathplanner.view;
 
+import com.ap4b.pathplanner.model.Point;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ScrollPane;
@@ -30,7 +31,9 @@ public class Map extends Pane {
     private final Color POINT_COLOR = Color.BLACK;
 
     private final int ITINERARY_WIDTH = 5;
-    private final int POINT_SIZE = 20;
+    private final int POINT_SIZE = 15;
+
+    private Point nearestPoint = null;
 
     /**
      * Constructs a Map instance with the specified image path.
@@ -94,6 +97,15 @@ public class Map extends Pane {
         clear(gc);
         gc.drawImage(mapImage, 0, 0, canvas.getWidth(), canvas.getHeight());
 
+        // Draw nearest point
+        if (nearestPoint != null) {
+            drawPoint(gc, nearestPoint, POINT_COLOR);
+            if (nearestPoint.getInfos() != null) {
+                drawPointInfos(gc, nearestPoint);
+            }
+        }
+
+        /*
         // Draw itinerary
         if (itinerary.size() > 1) {
             gc.setStroke(ITINERARY_COLOR);
@@ -110,7 +122,7 @@ public class Map extends Pane {
             // Draw start and end points
             drawPoint(gc, itinerary.firstElement(), START_COLOR, "S");
             drawPoint(gc, itinerary.lastElement(), END_COLOR, "E");
-        }
+        }*/
     }
 
     /**
@@ -119,14 +131,22 @@ public class Map extends Pane {
      * @param gc the GraphicsContext
      * @param point the point location
      * @param color the color of the point
-     * @param label the label of the point
      */
-    private void drawPoint(GraphicsContext gc, Point2D point, Color color, String label) {
+    private void drawPoint(GraphicsContext gc, Point point, Color color) {
         gc.setFill(color);
         gc.fillOval(point.getX() - POINT_SIZE / 2, point.getY() - POINT_SIZE / 2, POINT_SIZE, POINT_SIZE);
         gc.setFill(Color.WHITE);
-        gc.setFont(Font.font("Arial", FontWeight.BOLD, 14));
-        gc.fillText(label, point.getX(), point.getY());
+        gc.setFont(Font.font("Arial", FontWeight.BOLD, 10));
+    }
+
+    private void drawPointInfos(GraphicsContext gc, Point point) {
+        gc.setFill(Color.WHITE);
+        gc.fillRect(point.getX() - 100, point.getY() - 50, 100, 50);
+        gc.setFill(Color.BLACK);
+        gc.setFont(Font.font("Arial", FontWeight.BOLD, 10));
+        for (int i = 0; i < point.getInfos().size(); i++) {
+            gc.fillText(point.getInfos().elementAt(i), point.getX() - 50, point.getY() - 50 + 20 + 10 * i);
+        }
     }
 
     /**
@@ -140,6 +160,14 @@ public class Map extends Pane {
 
     public ScrollPane getScrollPane() {
         return scrollPane;
+    }
+
+    public void setNearestPoint(Point nearestPoint) {
+        this.nearestPoint = nearestPoint;
+    }
+
+    public Point getNearestPoint() {
+        return nearestPoint;
     }
 }
 

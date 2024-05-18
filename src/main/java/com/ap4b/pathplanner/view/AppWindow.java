@@ -1,6 +1,7 @@
 package com.ap4b.pathplanner.view;
 
 import com.ap4b.pathplanner.controller.DepartureArrivalPanelController;
+import com.ap4b.pathplanner.controller.MapController;
 import com.ap4b.pathplanner.controller.MenuController;
 import com.ap4b.pathplanner.model.Application;
 import javafx.geometry.Pos;
@@ -20,6 +21,8 @@ public class AppWindow {
     private DepartureArrivalPanel departureArrivalPanel;
     private MenuController menuController;
     private DepartureArrivalPanelController departureArrivalPanelController;
+    private Map map;
+    private MapController mapController;
 
     private final int INFO_PANEL_WIDTH = 250;
     private final int SPACE_BETWEEN_MAP_AND_PANEL = 35;
@@ -39,9 +42,10 @@ public class AppWindow {
         menuController = new MenuController(menuBar);
 
         // Create Map
-        Map map = new Map(app.getMapLink());
+        map = new Map(app.getMapLink());
         ZoomControl zoomControl = new ZoomControl();
         BorderPane.setAlignment(zoomControl, Pos.BOTTOM_RIGHT);
+        mapController = new MapController(app, map);
 
         // Panel for Map and ZoomControl
         BorderPane mapContainer = new BorderPane();
@@ -78,5 +82,9 @@ public class AppWindow {
 
     public DepartureArrivalPanel getDepartureArrivalPanel() {
         return departureArrivalPanel;
+    }
+
+    public Map getMap() {
+        return map;
     }
 }

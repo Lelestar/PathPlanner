@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -118,6 +119,10 @@ public class RoadNetwork {
         return points.size();
     }
 
+    public Set getPointsList() {
+        return points.keySet();
+    }
+
     public int getConnectionCount() {
         return connectionCount;
     }
@@ -132,6 +137,10 @@ public class RoadNetwork {
 
     public int getRoadCount() {
         return routes.size();
+    }
+
+    public Set getRoadsList() {
+        return routes.keySet();
     }
 
     public String getImageFileName() {

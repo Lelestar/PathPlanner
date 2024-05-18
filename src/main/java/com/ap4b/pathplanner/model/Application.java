@@ -10,14 +10,15 @@ import java.util.Vector;
 public class Application {
     // Constants
     private final String ImagesPath = "/com/ap4b/pathplanner/img/";
-
     private final String mapLink;
+    private final float INITIAL_ZOOM = (float) 0.5;
 
     // View
     private AppWindow appWindow;
 
     // Road Network
     private RoadNetwork roadNetwork;
+    private ShortestPath shortestPath;
     private Vector<ItineraryState> path;
 
     // Departure and Arrival points numbers
@@ -29,6 +30,9 @@ public class Application {
         roadNetwork.parseXml(XmlPath);
 
         mapLink = ImagesPath + roadNetwork.getImageFileName();
+
+        shortestPath = new ShortestPath();
+        shortestPath.init(roadNetwork, INITIAL_ZOOM);
     }
 
     public void setAppWindow(AppWindow appWindow) {
@@ -130,5 +134,25 @@ public class Application {
         alert.setHeaderText(header);
         alert.setContentText(content);
         alert.showAndWait();
+    }
+
+    public void updateNearestPoint(int x, int y) {
+        Point mousePoint = new Point(x, y);
+
+        Point previousPoint = appWindow.getMap().getNearestPoint();
+        // Find the nearest point
+        int nearestPointId = shortestPath.findNearestNode(mousePoint);
+        Point nearestPoint = shortestPath.getNodeCoords(nearestPointId);
+
+        if (previousPoint == null || !previousPoint.equals(nearestPoint)) {
+            // Add data to the nearest point
+            Vector<String> infos = new Vector<>();
+            infos.add("Point " + nearestPointId);
+
+            // Set the nearest point
+            nearestPoint.setInfos(infos);
+            appWindow.getMap().setNearestPoint(nearestPoint);
+            appWindow.getMap().draw();
+        }
     }
 }
