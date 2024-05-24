@@ -23,7 +23,7 @@ public class Map extends Pane {
     private Image mapImage;
     private Canvas canvas;
     private ScrollPane scrollPane;
-    private Vector<Point2D> itinerary = new Vector<>();
+    private Vector<Point> itinerary = new Vector<>();
 
     private final Color START_COLOR = Color.GREEN;
     private final Color END_COLOR = Color.RED;
@@ -105,14 +105,13 @@ public class Map extends Pane {
             }
         }
 
-        /*
         // Draw itinerary
         if (itinerary.size() > 1) {
             gc.setStroke(ITINERARY_COLOR);
             gc.setLineWidth(ITINERARY_WIDTH);
 
-            Point2D prev = null;
-            for (Point2D pt : itinerary) {
+            Point prev = null;
+            for (Point pt : itinerary) {
                 if (prev != null) {
                     gc.strokeLine(prev.getX(), prev.getY(), pt.getX(), pt.getY());
                 }
@@ -120,9 +119,9 @@ public class Map extends Pane {
             }
 
             // Draw start and end points
-            drawPoint(gc, itinerary.firstElement(), START_COLOR, "S");
-            drawPoint(gc, itinerary.lastElement(), END_COLOR, "E");
-        }*/
+            drawPoint(gc, itinerary.firstElement(), START_COLOR);
+            drawPoint(gc, itinerary.lastElement(), END_COLOR);
+        }
     }
 
     /**
@@ -179,5 +178,7 @@ public class Map extends Pane {
     public Point getNearestPoint() {
         return nearestPoint;
     }
+
+    public void addPoint(Point p) {itinerary.add(p);}
 }
 

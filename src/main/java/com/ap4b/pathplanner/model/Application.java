@@ -131,6 +131,24 @@ public class Application {
             createErrorAlert("Error", "Same departure and arrival point", "Please select different departure and arrival points.");
             return;
         }
+        if ((departurePoint >= 0) && (arrivalPoint >= 0)) {
+            path = shortestPath.solve(departurePoint, arrivalPoint);
+            ItineraryState pos;
+            for (Iterator it = path.iterator(); it.hasNext();)
+            {
+                pos = (ItineraryState) it.next();
+                appWindow.getMap().addPoint(shortestPath.getNodeCoords(pos.node));
+            }
+            //afficherListeRoutes();
+        }
+        /**else {
+            if (departurePoint >= 0) {
+                fenetre.getPanneauVue().getCarte().ajouterPoint(plus_court_chemin.getNodeCoords(depart));
+            }
+            else if (arrivee >= 0) {
+                fenetre.getPanneauVue().getCarte().ajouterPoint(plus_court_chemin.getNodeCoords(arrivee));
+            }
+        }*/
     }
 
     public void createErrorAlert(String title, String header, String content) {
