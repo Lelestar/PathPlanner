@@ -12,7 +12,7 @@ import javafx.scene.text.FontWeight;
 import java.net.URI;
 import java.net.URL;
 import java.util.Vector;
-import javafx.geometry.Point2D;
+
 import javafx.scene.transform.Scale;
 
 /**
@@ -34,6 +34,7 @@ public class Map extends Pane {
     private final int POINT_SIZE = 15;
 
     private Point nearestPoint = null;
+    private boolean itineraryUniquePointIsDeparturePoint = true;
 
     /**
      * Constructs a Map instance with the specified image path.
@@ -87,6 +88,7 @@ public class Map extends Pane {
         Scale newScale = new Scale(zoomFactor, zoomFactor);
         canvas.getTransforms().clear();
         canvas.getTransforms().add(newScale);
+        draw();
     }
 
     /**
@@ -122,6 +124,15 @@ public class Map extends Pane {
             drawPoint(gc, itinerary.firstElement(), START_COLOR);
             drawPoint(gc, itinerary.lastElement(), END_COLOR);
         }
+        else if (itinerary.size() == 1) {
+            if (itineraryUniquePointIsDeparturePoint) {
+                drawPoint(gc, itinerary.getFirst(), START_COLOR);
+            }
+            else {
+                drawPoint(gc, itinerary.getFirst(), END_COLOR);
+            }
+        }
+
     }
 
     /**
@@ -180,5 +191,22 @@ public class Map extends Pane {
     }
 
     public void addPoint(Point p) {itinerary.add(p);}
+
+    public void setTypePointUnique(boolean isDeparture) {
+        itineraryUniquePointIsDeparturePoint = isDeparture;
+    }
+
+    public void deleteFirst(){
+        if (!itinerary.isEmpty()) {
+            itinerary.remove(0);
+        }
+
+    }
+
+    public void deleteLast(){
+        if (!itinerary.isEmpty()) {
+            itinerary.remove(itinerary.size() - 1);
+        }
+    }
 }
 

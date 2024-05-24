@@ -18,6 +18,11 @@ public class Application {
     private final Point LAMBERT_TOP_LEFT = new Point(897990, 2324046);
     private final Point LAMBERT_BOTTOM_RIGHT = new Point(971518, 2272510);
     private final Point PIXELS_BOTTOM_RIGHT = new Point(4000, 2801);
+    public final static float ZOOM_NOTCH = (float) 0.05;
+    private float zoomPercentage = INITIAL_ZOOM;
+    private float oldZoom = INITIAL_ZOOM;
+    private final float ZOOM_MIN = (float) 0.1;
+    private final float ZOOM_MAX = (float) 1;
 
     // View
     private AppWindow appWindow;
@@ -30,6 +35,8 @@ public class Application {
     // Departure and Arrival points numbers
     private int departurePoint = -1;
     private int arrivalPoint = -1;
+
+    private int mouseNearestPoint = -1;
 
     public Application(String XmlPath) {
         roadNetwork = new RoadNetwork();
@@ -106,7 +113,7 @@ public class Application {
         setArrivalPoint(arrivalPointNUmber);
         setDeparturePoint(departurePointNumber);
         // Find the shortest path
-        searchItinerary();
+        searchItineraryFromPanel();
 
     }
 
@@ -118,7 +125,7 @@ public class Application {
         this.arrivalPoint = arrivalPoint;
     }
 
-    public void searchItinerary() {
+    public void searchItineraryFromPanel() {
         // Check if the departure and arrival points are set
         if (departurePoint == -1 || arrivalPoint == -1) {
             // Create an alert
@@ -151,6 +158,28 @@ public class Application {
         }*/
     }
 
+    public void searchItineraryFromMap() {
+        if (departurePoint >= 0) {
+            appWindow.getMap().deleteFirst();
+            appWindow.getMap().addPoint(shortestPath.getNodeCoords(departurePoint));
+        }
+        else if (arrivalPoint >= 0) {
+            appWindow.getMap().deleteLast();
+            appWindow.getMap().addPoint(shortestPath.getNodeCoords(arrivalPoint));
+        }
+
+        if ((departurePoint >= 0) && (arrivalPoint >= 0)) {
+            path = shortestPath.solve(departurePoint, arrivalPoint);
+            ItineraryState pos;
+            for (Iterator it = path.iterator(); it.hasNext();)
+            {
+                pos = (ItineraryState) it.next();
+                appWindow.getMap().addPoint(shortestPath.getNodeCoords(pos.node));
+            }
+            //afficherListeRoutes();
+        }
+    }
+
     public void createErrorAlert(String title, String header, String content) {
         // Create an alert
         Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -169,6 +198,7 @@ public class Application {
         Point nearestPoint = shortestPath.getNodeCoords(nearestPointId);
 
         if (previousPoint == null || !previousPoint.equals(nearestPoint)) {
+            mouseNearestPoint = nearestPointId;
             // Add data to the nearest point
             Vector<String> infos = new Vector<>();
             infos.add("Point " + nearestPointId);
@@ -217,5 +247,44 @@ public class Application {
 
         // Return the calculated Lambert coordinates as a new point
         return new Point(x, y);
+    }
+
+    public void modifyZoom(float modification){
+        zoomPercentage+=modification;
+        setZoom();
+    }
+
+    public void setZoomByValue(float value){
+        zoomPercentage = value;
+        setZoom();
+    }
+
+    public void setZoom(){
+        if (zoomPercentage > ZOOM_MAX) zoomPercentage = ZOOM_MAX;
+        if (zoomPercentage < ZOOM_MIN) zoomPercentage = ZOOM_MIN;
+        if (oldZoom != zoomPercentage) {
+            appWindow.getZoomControl().setZoomSlider(zoomPercentage);
+            appWindow.getMap().updateZoom(zoomPercentage);
+            shortestPath.init(roadNetwork, zoomPercentage);
+            searchItineraryFromPanel();
+        }
+    }
+
+    /**
+     * Sets the nearest point as start.
+     */
+    public void setNearestPointAsStart() {
+        setDeparturePoint(mouseNearestPoint);
+        appWindow.getMap().setTypePointUnique(true);
+        searchItineraryFromMap();
+    }
+
+    /**
+     * Sets the nearest point as arrival.
+     */
+    public void setNearestPointAsArrival() {
+        setArrivalPoint(mouseNearestPoint);
+        appWindow.getMap().setTypePointUnique(false);
+        searchItineraryFromMap();
     }
 }

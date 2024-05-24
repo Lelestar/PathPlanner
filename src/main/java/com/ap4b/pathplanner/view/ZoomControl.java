@@ -1,5 +1,6 @@
 package com.ap4b.pathplanner.view;
 
+import com.ap4b.pathplanner.model.Application;
 import javafx.scene.layout.HBox;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
@@ -12,6 +13,19 @@ import javafx.geometry.Pos;
 public class ZoomControl extends HBox {
 
     private Button btnZoomIn, btnZoomOut;
+
+    public Slider getZoomSlider() {
+        return zoomSlider;
+    }
+
+    public Button getBtnZoomOut() {
+        return btnZoomOut;
+    }
+
+    public Button getBtnZoomIn() {
+        return btnZoomIn;
+    }
+
     private Slider zoomSlider;
 
     public ZoomControl() {
@@ -25,8 +39,15 @@ public class ZoomControl extends HBox {
         btnZoomIn.setMinSize(20, 20);
         btnZoomOut.setMinSize(20, 20);
 
-        zoomSlider = new Slider(0, 100, 50);
+        zoomSlider = new Slider(0.1, 1, 0.5);
+        zoomSlider.setMajorTickUnit(Application.ZOOM_NOTCH);
+        zoomSlider.setMinorTickCount(0);
+        zoomSlider.setSnapToTicks(true);
 
-        getChildren().addAll(btnZoomIn, zoomSlider, btnZoomOut);
+        getChildren().addAll(btnZoomOut, zoomSlider, btnZoomIn);
+    }
+
+    public void setZoomSlider(float value){
+        zoomSlider.adjustValue(value);
     }
 }
