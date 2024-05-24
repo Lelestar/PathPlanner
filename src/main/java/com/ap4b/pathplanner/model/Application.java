@@ -5,13 +5,19 @@ import com.ap4b.pathplanner.view.DepartureArrivalPanel;
 import javafx.scene.control.Alert;
 
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Set;
 import java.util.Vector;
 
 public class Application {
     // Constants
     private final String ImagesPath = "/com/ap4b/pathplanner/img/";
     private final String mapLink;
+    private final double MAP_SCALE = 18.388125;
     private final float INITIAL_ZOOM = (float) 0.5;
+    private final Point LAMBERT_TOP_LEFT = new Point(897990, 2324046);
+    private final Point LAMBERT_BOTTOM_RIGHT = new Point(971518, 2272510);
+    private final Point PIXELS_BOTTOM_RIGHT = new Point(4000, 2801);
 
     // View
     private AppWindow appWindow;
@@ -148,11 +154,50 @@ public class Application {
             // Add data to the nearest point
             Vector<String> infos = new Vector<>();
             infos.add("Point " + nearestPointId);
+            // Add the Lambert coordinates
+            Point newCoords = getLambertCoords(nearestPoint);
+            infos.add("Coordinates: (" + newCoords.getX() + ", " + newCoords.getY() + ")");
+            // Search for the roads
+            Set roads = roadNetwork.getRoadsList();
+            Iterator itRoads;
+            String roadName;
+            for (itRoads = roads.iterator(); itRoads.hasNext(); ) {
+                roadName = (String) itRoads.next();
+                Vector<Integer> points = roadNetwork.getRoad(roadName).getPoints();
+                for (int j = 0; j < points.size(); j++) {
+                    if (points.elementAt(j) == nearestPointId) {
+                        infos.add("Road: " + roadName);
+                    }
+                }
+            }
 
             // Set the nearest point
             nearestPoint.setInfos(infos);
             appWindow.getMap().setNearestPoint(nearestPoint);
             appWindow.getMap().draw();
         }
+    }
+
+    /**
+     * Gets the Lambert coordinates.
+     *
+     * @param pt_pixels the point in pixel coordinates
+     * @return the Lambert coordinates
+     */
+    public Point getLambertCoords(Point pt_pixels) {
+        // Calculate the extent of the Lambert coordinates in x and y directions
+        int extentX = (int) (LAMBERT_BOTTOM_RIGHT.getX() - LAMBERT_TOP_LEFT.getX());
+        int extentY = (int) (LAMBERT_BOTTOM_RIGHT.getY() - LAMBERT_TOP_LEFT.getY());
+
+        // Calculate the proportional Lambert coordinates based on the pixel coordinates
+        double lambertZeroX = (double) (pt_pixels.getX() * extentX) / PIXELS_BOTTOM_RIGHT.getX();
+        double lambertZeroY = (double) (pt_pixels.getY() * extentY) / PIXELS_BOTTOM_RIGHT.getY();
+
+        // Convert to final Lambert coordinates by adding the top-left Lambert coordinates
+        int x = (int) (LAMBERT_TOP_LEFT.getX() + lambertZeroX);
+        int y = (int) (LAMBERT_TOP_LEFT.getY() + lambertZeroY);
+
+        // Return the calculated Lambert coordinates as a new point
+        return new Point(x, y);
     }
 }

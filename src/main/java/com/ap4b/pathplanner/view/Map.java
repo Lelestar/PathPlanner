@@ -140,12 +140,22 @@ public class Map extends Pane {
     }
 
     private void drawPointInfos(GraphicsContext gc, Point point) {
+        int lineHeight = 15;
+        int padding = 10;
+        int infoCount = point.getInfos().size();
+        int rectHeight = padding * 2 + lineHeight * infoCount;
+
+        gc.setStroke(Color.BLACK);
+        gc.setLineWidth(1);
+
         gc.setFill(Color.WHITE);
-        gc.fillRect(point.getX() - 100, point.getY() - 50, 100, 50);
+        gc.fillRect(point.getX(), point.getY() - rectHeight, 200, rectHeight);
+        gc.strokeRect(point.getX(), point.getY() - rectHeight, 200, rectHeight);
+
         gc.setFill(Color.BLACK);
         gc.setFont(Font.font("Arial", FontWeight.BOLD, 10));
-        for (int i = 0; i < point.getInfos().size(); i++) {
-            gc.fillText(point.getInfos().elementAt(i), point.getX() - 50, point.getY() - 50 + 20 + 10 * i);
+        for (int i = 0; i < infoCount; i++) {
+            gc.fillText(point.getInfos().elementAt(i), point.getX() + padding, point.getY() - rectHeight + padding + lineHeight * (i + 1));
         }
     }
 
