@@ -208,5 +208,10 @@ public class Map extends Pane {
             itinerary.remove(itinerary.size() - 1);
         }
     }
+
+    public void resetItinerary() {
+        itinerary.clear();
+        draw();
+    }
 }
 

@@ -96,6 +96,8 @@ public class Application {
     }
 
     public void fillPointsLists(DepartureArrivalPanel.Direction direction) {
+        // Reset the combo boxes
+        appWindow.getDepartureArrivalPanel().resetPoints(direction);
         // Fill the points lists
         String roadName = appWindow.getDepartureArrivalPanel().getSelectedStreet(direction);
         if (roadName != null) {
@@ -119,10 +121,12 @@ public class Application {
 
     public void setDeparturePoint(int departurePoint) {
         this.departurePoint = departurePoint;
+        appWindow.getMap().resetItinerary();
     }
 
     public void setArrivalPoint(int arrivalPoint) {
         this.arrivalPoint = arrivalPoint;
+        appWindow.getMap().resetItinerary();
     }
 
     public void searchItineraryFromPanel() {

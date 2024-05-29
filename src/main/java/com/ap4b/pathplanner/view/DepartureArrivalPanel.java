@@ -139,6 +139,14 @@ public class DepartureArrivalPanel extends HBox {
         }
     }
 
+    public void resetPoints(Direction direction) {
+        if (direction == Direction.DEPARTURE) {
+            cbPointDeparture.getItems().clear();
+        } else if (direction == Direction.ARRIVAL) {
+            cbPointArrival.getItems().clear();
+        }
+    }
+
     public int getPointNumber(Direction direction) {
         if (cbPointDeparture.getSelectionModel().getSelectedItem() == null || cbPointArrival.getSelectionModel().getSelectedItem() == null) {
             return -1;
