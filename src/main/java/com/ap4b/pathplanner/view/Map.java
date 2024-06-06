@@ -126,10 +126,10 @@ public class Map extends Pane {
         }
         else if (itinerary.size() == 1) {
             if (itineraryUniquePointIsDeparturePoint) {
-                drawPoint(gc, itinerary.getFirst(), START_COLOR);
+                drawPoint(gc, itinerary.firstElement(), START_COLOR);
             }
             else {
-                drawPoint(gc, itinerary.getFirst(), END_COLOR);
+                drawPoint(gc, itinerary.firstElement(), END_COLOR);
             }
         }
 
