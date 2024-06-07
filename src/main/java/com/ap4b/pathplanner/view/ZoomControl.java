@@ -1,11 +1,13 @@
 package com.ap4b.pathplanner.view;
 
 import com.ap4b.pathplanner.model.Application;
+import javafx.event.Event;
 import javafx.scene.layout.HBox;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.input.MouseEvent;
 
 /**
  * Zoom controls positioned at the bottom-left of the map.

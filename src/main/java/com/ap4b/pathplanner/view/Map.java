@@ -36,6 +36,8 @@ public class Map extends Pane {
     private Point nearestPoint = null;
     private boolean itineraryUniquePointIsDeparturePoint = true;
 
+    private double zoomFactor = 1.0;
+
     /**
      * Constructs a Map instance with the specified image path.
      *
@@ -85,6 +87,7 @@ public class Map extends Pane {
      * @param zoomFactor the zoom factor
      */
     public void updateZoom(double zoomFactor) {
+        this.zoomFactor = zoomFactor;
         Scale newScale = new Scale(zoomFactor, zoomFactor);
         canvas.getTransforms().clear();
         canvas.getTransforms().add(newScale);
@@ -99,11 +102,14 @@ public class Map extends Pane {
         clear(gc);
         gc.drawImage(mapImage, 0, 0, canvas.getWidth(), canvas.getHeight());
 
+        double scrollX = scrollPane.getHvalue() * (canvas.getWidth() - scrollPane.getViewportBounds().getWidth());
+        double scrollY = scrollPane.getVvalue() * (canvas.getHeight() - scrollPane.getViewportBounds().getHeight());
+
         // Draw nearest point
         if (nearestPoint != null) {
             drawPoint(gc, nearestPoint, POINT_COLOR);
             if (nearestPoint.getInfos() != null) {
-                drawPointInfos(gc, nearestPoint);
+                drawPointInfos(gc, nearestPoint, scrollX, scrollY);
             }
         }
 
@@ -149,24 +155,36 @@ public class Map extends Pane {
         gc.setFont(Font.font("Arial", FontWeight.BOLD, 10));
     }
 
-    private void drawPointInfos(GraphicsContext gc, Point point) {
+    private void drawPointInfos(GraphicsContext gc, Point point, double scrollX, double scrollY) {
         int lineHeight = 15;
         int padding = 10;
         int infoCount = point.getInfos().size();
         int rectHeight = padding * 2 + lineHeight * infoCount;
 
+        double x = (point.getX() * zoomFactor) - scrollX;
+        double y = (point.getY() * zoomFactor) - scrollY;
+
+        // Save the current state of the graphics context
+        gc.save();
+
+        // Disable zoom effect for the rectangle
+        gc.setTransform(1, 0, 0, 1, 0, 0);
+
         gc.setStroke(Color.BLACK);
         gc.setLineWidth(1);
 
         gc.setFill(Color.WHITE);
-        gc.fillRect(point.getX(), point.getY() - rectHeight, 200, rectHeight);
-        gc.strokeRect(point.getX(), point.getY() - rectHeight, 200, rectHeight);
+        gc.fillRect(x / zoomFactor, (y - rectHeight) / zoomFactor, 200 / zoomFactor, rectHeight / zoomFactor);
+        gc.strokeRect(x / zoomFactor, (y - rectHeight) / zoomFactor, 200 / zoomFactor, rectHeight / zoomFactor);
 
         gc.setFill(Color.BLACK);
-        gc.setFont(Font.font("Arial", FontWeight.BOLD, 10));
+        gc.setFont(Font.font("Arial", FontWeight.BOLD, 10 / zoomFactor));
         for (int i = 0; i < infoCount; i++) {
-            gc.fillText(point.getInfos().elementAt(i), point.getX() + padding, point.getY() - rectHeight + padding + lineHeight * (i + 1));
+            gc.fillText(point.getInfos().elementAt(i), (x + padding) / zoomFactor, (y - rectHeight + padding + lineHeight * (i + 1)) / zoomFactor);
         }
+
+        // Restore the previous state of the graphics context
+        gc.restore();
     }
 
     /**
@@ -180,6 +198,14 @@ public class Map extends Pane {
 
     public ScrollPane getScrollPane() {
         return scrollPane;
+    }
+
+    public Canvas getCanvas() {
+        return canvas;
+    }
+
+    public double getZoomFactor() {
+        return zoomFactor;
     }
 
     public void setNearestPoint(Point nearestPoint) {

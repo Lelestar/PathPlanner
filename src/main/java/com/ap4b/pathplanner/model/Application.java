@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.Vector;
+import java.lang.Math;
 
 public class Application {
     // Constants
@@ -150,7 +151,7 @@ public class Application {
                 pos = (ItineraryState) it.next();
                 appWindow.getMap().addPoint(shortestPath.getNodeCoords(pos.node));
             }
-            //afficherListeRoutes();
+            displayRoadList();
         }
         /**else {
             if (departurePoint >= 0) {
@@ -180,7 +181,7 @@ public class Application {
                 pos = (ItineraryState) it.next();
                 appWindow.getMap().addPoint(shortestPath.getNodeCoords(pos.node));
             }
-            //afficherListeRoutes();
+            displayRoadList();
         }
     }
 
@@ -290,5 +291,86 @@ public class Application {
         setArrivalPoint(mouseNearestPoint);
         appWindow.getMap().setTypePointUnique(false);
         searchItineraryFromMap();
+    }
+
+    public void displayRoadList(){
+        appWindow.getPanelInformations().clearRoads();
+            //appWindow.getPanelInformations().setMessage(null, null);
+            String roadName = "", formerRoadName = "";
+            ItineraryState pos = null;
+            int lenRoad = 0;
+            int lenTotal = 0;
+            int idEdge;
+            int numPt, numFormerPt = -1, numFormerPt2 = -1;
+            String leftRight;
+            appWindow.getPanelInformations().clearRoads();
+
+            for (Iterator it = path.iterator(); it.hasNext(); ) {
+                pos = (ItineraryState) it.next();
+                numPt = pos.node;
+                if (numFormerPt >= 0) {
+                    idEdge = shortestPath.findEdge(numPt, numFormerPt);
+                    if (idEdge >=0) {
+                        roadName = shortestPath.getEdgeName(idEdge);
+                        lenRoad += shortestPath.getEdgeLength(idEdge);
+                        if ((!formerRoadName.equals(roadName)) || (!it.hasNext()))
+                            if (numFormerPt2 != -1) {
+                                leftRight = determineLeftRight(numFormerPt2, numFormerPt, numPt);
+                            }
+                            else {
+                                leftRight = "tout-droit";
+                            }
+                            appWindow.getPanelInformations().addRoute(roadName + " (" + convertUnitDistance(lenRoad, 1) + ")");
+                            lenTotal += lenRoad;
+                            lenRoad=0;
+                        }
+                        formerRoadName = roadName;
+                    }
+                    else if (numFormerPt != -1){
+                        appWindow.getPanelInformations().addRoute("Erreur : Route non trouv\u00e9e ! (" + numFormerPt + "|" + numPt + ")");
+                    }
+                    numFormerPt2 = numFormerPt;
+                    numFormerPt = numPt;
+                }
+                appWindow.getPanelInformations().setPathLength(convertUnitDistance(lenTotal,1));
+
+    }
+
+
+
+    private String convertUnitDistance(double px, float zoom) {
+        // Conversion dans l'unite de mesure
+        String unit = "m";
+        double m = (double)(px * (double)MAP_SCALE * (double)((double)1 / (double)zoom));
+        if (m > 1000) {
+            m /= 1000;
+            unit = "km";
+        }
+        m = ((double) Math.round(m * 100)) / 100;
+        return new String(m + " " + unit);
+    }
+
+    private String determineLeftRight(int id1, int id2, int id3) {
+        Point p1 = roadNetwork.getPoint(id1);
+        Point p2 = roadNetwork.getPoint(id2);
+        Point p3 = roadNetwork.getPoint(id3);
+
+        //determiner l'angle entre les deux droites
+
+        //clacul de l'angle du precedent arc par rapport a l'origine
+        double angle1 = (Math.atan2((p2.getY()-p1.getY()),(p2.getX()-p1.getX())));
+
+        //calcul de l'angle de l'arc deux fois precedent par rapport a l'origine
+        double angle2 = (Math.atan2((p3.getY()-p1.getY()),(p3.getX()-p1.getX())));
+
+        //soustraction de l'un par rapport a l'autre pour avoir leur angle relatif
+        double angle = angle2-angle1;
+
+        if(Math.sin(angle)<-0.1)
+            return "gauche";
+        else if (Math.sin(angle)>0.1)
+            return "droite";
+        else
+            return "tout_droit";
     }
 }

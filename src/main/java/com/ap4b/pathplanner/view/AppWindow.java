@@ -5,6 +5,7 @@ import com.ap4b.pathplanner.controller.MapController;
 import com.ap4b.pathplanner.controller.MenuController;
 import com.ap4b.pathplanner.controller.ZoomController;
 import com.ap4b.pathplanner.model.Application;
+import javafx.geometry.Bounds;
 import javafx.geometry.Pos;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -26,6 +27,7 @@ public class AppWindow {
     private ZoomControl zoomControl;
     private MapController mapController;
     private ZoomController zoomController;
+    private PanelInformations panelInformations;
 
     private final int INFO_PANEL_WIDTH = 250;
     private final int SPACE_BETWEEN_MAP_AND_PANEL = 35;
@@ -48,7 +50,7 @@ public class AppWindow {
         map = new Map(app.getMapLink());
         zoomControl = new ZoomControl();
         BorderPane.setAlignment(zoomControl, Pos.BOTTOM_RIGHT);
-        mapController = new MapController(app, map);
+        mapController = new MapController(app, map, this);
         zoomController = new ZoomController(zoomControl, app);
 
         // Panel for Map and ZoomControl
@@ -59,7 +61,7 @@ public class AppWindow {
 
         // Create DepartureArrivalPanel and PanelInformations
         VBox rightPanel = new VBox();
-        PanelInformations panelInformations = new PanelInformations(INFO_PANEL_WIDTH, primaryStage.getHeight(), "metric");
+        panelInformations = new PanelInformations(INFO_PANEL_WIDTH, primaryStage.getHeight(), "metric");
         departureArrivalPanel = new DepartureArrivalPanel();
         VBox.setMargin(departureArrivalPanel, new javafx.geometry.Insets(0, 0, 0, 10));
         departureArrivalPanelController = new DepartureArrivalPanelController(app, departureArrivalPanel);
@@ -93,4 +95,14 @@ public class AppWindow {
     }
 
     public ZoomControl getZoomControl() { return zoomControl; }
+
+    public Bounds getZoomControlBoundsInScene() {
+        return zoomControl.localToScene(zoomControl.getBoundsInLocal());
+    }
+
+    public PanelInformations getPanelInformations() { return panelInformations; }
+
+    public void resetMessage(){
+
+    }
 }

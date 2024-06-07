@@ -21,6 +21,12 @@ public class PanelInformations extends VBox {
     private ListView<String> listRouteSheet;
     private List<String> routeDetails = new ArrayList<>();
 
+    private String message1, message2, su, pathLength;
+
+    public String setPathLength(String pathLength){
+        return this.pathLength = pathLength;
+    }
+
     public PanelInformations(int width, double height, String unitsSystem) {
         super(10); // spacing between elements
         setPadding(new Insets(10));
@@ -70,11 +76,16 @@ public class PanelInformations extends VBox {
         listInfos.getItems().addAll(infos);
     }
 
+    public void updateRoads(List<String> roads) {
+        listRouteSheet.getItems().clear();
+        listRouteSheet.getItems().addAll(roads);
+    }
+
     public void clearInfos() {
         listInfos.getItems().clear();
     }
 
-    public void clearRoutes() {
+    public void clearRoads() {
         listRouteSheet.getItems().clear();
         routeDetails.clear();
     }
@@ -84,5 +95,7 @@ public class PanelInformations extends VBox {
         clearInfos();
         updateInfos(List.of(message1, message2));
     }
+
+    public void setLengthPath(String lengthPath){};
 }
 
