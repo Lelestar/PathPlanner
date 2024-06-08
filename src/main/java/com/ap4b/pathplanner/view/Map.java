@@ -13,6 +13,7 @@ import java.net.URI;
 import java.net.URL;
 import java.util.Vector;
 
+import javafx.scene.transform.Affine;
 import javafx.scene.transform.Scale;
 
 /**
@@ -37,6 +38,13 @@ public class Map extends Pane {
     private boolean itineraryUniquePointIsDeparturePoint = true;
 
     private double zoomFactor = 1.0;
+
+    private final Color SCALE_COLOR = Color.BLACK;
+    private final double SCALE_STROKE_WIDTH = 2.0;
+    private final int SCALE_START_X = 15;  // Distance from the left border
+    private final int SCALE_START_Y = 25;  // Distance from the top border
+    private String scaleLabel = "";
+    private int scaleSizePx = 0;
 
     /**
      * Constructs a Map instance with the specified image path.
@@ -78,6 +86,9 @@ public class Map extends Pane {
             e.printStackTrace();
             throw new RuntimeException("Failed to initialize map.", e);
         }
+
+        scrollPane.hvalueProperty().addListener((obs, oldVal, newVal) -> draw());
+        scrollPane.vvalueProperty().addListener((obs, oldVal, newVal) -> draw());
     }
 
 
@@ -105,9 +116,13 @@ public class Map extends Pane {
         double scrollX = scrollPane.getHvalue() * (canvas.getWidth() - scrollPane.getViewportBounds().getWidth());
         double scrollY = scrollPane.getVvalue() * (canvas.getHeight() - scrollPane.getViewportBounds().getHeight());
 
+        // Adjust the point size and itinerary width for the current zoom level
+        double adjustedPointSize = POINT_SIZE / zoomFactor;
+        double adjustedItineraryWidth = ITINERARY_WIDTH / zoomFactor;
+
         // Draw nearest point
         if (nearestPoint != null) {
-            drawPoint(gc, nearestPoint, POINT_COLOR);
+            drawPoint(gc, nearestPoint, POINT_COLOR, adjustedPointSize);
             if (nearestPoint.getInfos() != null) {
                 drawPointInfos(gc, nearestPoint, scrollX, scrollY);
             }
@@ -116,7 +131,7 @@ public class Map extends Pane {
         // Draw itinerary
         if (itinerary.size() > 1) {
             gc.setStroke(ITINERARY_COLOR);
-            gc.setLineWidth(ITINERARY_WIDTH);
+            gc.setLineWidth(adjustedItineraryWidth);
 
             Point prev = null;
             for (Point pt : itinerary) {
@@ -127,18 +142,20 @@ public class Map extends Pane {
             }
 
             // Draw start and end points
-            drawPoint(gc, itinerary.firstElement(), START_COLOR);
-            drawPoint(gc, itinerary.lastElement(), END_COLOR);
+            drawPoint(gc, itinerary.firstElement(), START_COLOR, adjustedPointSize);
+            drawPoint(gc, itinerary.lastElement(), END_COLOR, adjustedPointSize);
         }
         else if (itinerary.size() == 1) {
             if (itineraryUniquePointIsDeparturePoint) {
-                drawPoint(gc, itinerary.firstElement(), START_COLOR);
+                drawPoint(gc, itinerary.firstElement(), START_COLOR, adjustedPointSize);
             }
             else {
-                drawPoint(gc, itinerary.firstElement(), END_COLOR);
+                drawPoint(gc, itinerary.firstElement(), END_COLOR, adjustedPointSize);
             }
         }
 
+        // Draw scale with fixed size
+        drawScale(gc, scrollX, scrollY, zoomFactor);
     }
 
     /**
@@ -148,9 +165,9 @@ public class Map extends Pane {
      * @param point the point location
      * @param color the color of the point
      */
-    private void drawPoint(GraphicsContext gc, Point point, Color color) {
+    private void drawPoint(GraphicsContext gc, Point point, Color color, double adjustedPointSize) {
         gc.setFill(color);
-        gc.fillOval(point.getX() - POINT_SIZE / 2, point.getY() - POINT_SIZE / 2, POINT_SIZE, POINT_SIZE);
+        gc.fillOval(point.getX() - adjustedPointSize / 2, point.getY() - adjustedPointSize / 2, adjustedPointSize, adjustedPointSize);
         gc.setFill(Color.WHITE);
         gc.setFont(Font.font("Arial", FontWeight.BOLD, 10));
     }
@@ -185,6 +202,41 @@ public class Map extends Pane {
 
         // Restore the previous state of the graphics context
         gc.restore();
+    }
+
+    /**
+     * Draw the scale in the top left corner.
+     *
+     * @param gc the GraphicsContext
+     */
+    private void drawScale(GraphicsContext gc, double scrollX, double scrollY, double zoomFactor) {
+        gc.save(); // Save the current state
+
+        // Get the visible area of the canvas
+        double visibleX = (scrollPane.getHvalue() * (canvas.getWidth() - scrollPane.getViewportBounds().getWidth()) / zoomFactor);
+        double visibleY = (scrollPane.getVvalue() * (canvas.getHeight() - scrollPane.getViewportBounds().getHeight()) / zoomFactor);
+
+        // Set the start position of the scale
+        double startX = (int) visibleX + SCALE_START_X;
+        double startY = (int) visibleY + SCALE_START_Y;
+
+        // Draw main line
+        gc.setStroke(SCALE_COLOR);
+        gc.setLineWidth(SCALE_STROKE_WIDTH / zoomFactor);
+        gc.strokeLine(startX, startY, startX + scaleSizePx / zoomFactor, startY);
+
+        // Draw vertical lines
+        gc.strokeLine(startX, startY - 2 / zoomFactor, startX, startY + 2 / zoomFactor);
+        gc.strokeLine(startX + scaleSizePx / (2 * zoomFactor), startY - 2 / zoomFactor, startX + scaleSizePx / (2 * zoomFactor), startY + 2 / zoomFactor);
+        gc.strokeLine(startX + scaleSizePx / zoomFactor, startY - 2 / zoomFactor, startX + scaleSizePx / zoomFactor, startY + 2 / zoomFactor);
+
+
+        // Draw scale text
+        gc.setFill(SCALE_COLOR);
+        gc.setFont(Font.font("Arial", FontWeight.BOLD, 10 / zoomFactor));
+        gc.fillText(scaleLabel, startX, startY - 5 / zoomFactor);
+
+        gc.restore(); // Restore the saved state
     }
 
     /**
@@ -238,6 +290,14 @@ public class Map extends Pane {
     public void resetItinerary() {
         itinerary.clear();
         draw();
+    }
+
+    public void setScaleLabel(String scale) {
+        scaleLabel = scale;
+    }
+
+    public void setScaleSize(int scaleSize) {
+        scaleSizePx = scaleSize;
     }
 }
 

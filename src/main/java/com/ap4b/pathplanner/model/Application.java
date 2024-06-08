@@ -24,6 +24,7 @@ public class Application {
     private float oldZoom = INITIAL_ZOOM;
     private final float ZOOM_MIN = (float) 0.1;
     private final float ZOOM_MAX = (float) 1;
+    private final int SCALE_SIZE_PX = 50;
 
     // View
     private AppWindow appWindow;
@@ -58,6 +59,8 @@ public class Application {
         fillCitiesLists();
         fillRoadsLists("All", DepartureArrivalPanel.Direction.BOTH);
         fillPointsLists(DepartureArrivalPanel.Direction.BOTH);
+        appWindow.getMap().setScaleSize(SCALE_SIZE_PX);
+        appWindow.getMap().setScaleLabel(convertUnitDistance(SCALE_SIZE_PX, zoomPercentage));
     }
 
     public String getMapLink() {
@@ -257,6 +260,7 @@ public class Application {
     public void modifyZoom(float modification){
         zoomPercentage+=modification;
         setZoom();
+        appWindow.getMap().setScaleLabel(convertUnitDistance(SCALE_SIZE_PX, zoomPercentage));
     }
 
     public void setZoomByValue(float value){
@@ -270,8 +274,8 @@ public class Application {
         if (oldZoom != zoomPercentage) {
             appWindow.getZoomControl().setZoomSlider(zoomPercentage);
             appWindow.getMap().updateZoom(zoomPercentage);
-            shortestPath.init(roadNetwork, zoomPercentage);
-            searchItineraryFromPanel();
+            //shortestPath.init(roadNetwork, zoomPercentage);
+            //searchItineraryFromPanel();
         }
     }
 
@@ -295,45 +299,44 @@ public class Application {
 
     public void displayRoadList(){
         appWindow.getPanelInformations().clearRoads();
-            //appWindow.getPanelInformations().setMessage(null, null);
-            String roadName = "", formerRoadName = "";
-            ItineraryState pos = null;
-            int lenRoad = 0;
-            int lenTotal = 0;
-            int idEdge;
-            int numPt, numFormerPt = -1, numFormerPt2 = -1;
-            String leftRight;
-            appWindow.getPanelInformations().clearRoads();
+        //appWindow.getPanelInformations().setMessage(null, null);
+        String roadName = "", formerRoadName = "";
+        ItineraryState pos = null;
+        int lenRoad = 0;
+        int lenTotal = 0;
+        int idEdge;
+        int numPt, numFormerPt = -1, numFormerPt2 = -1;
+        String leftRight;
+        appWindow.getPanelInformations().clearRoads();
 
-            for (Iterator it = path.iterator(); it.hasNext(); ) {
-                pos = (ItineraryState) it.next();
-                numPt = pos.node;
-                if (numFormerPt >= 0) {
-                    idEdge = shortestPath.findEdge(numPt, numFormerPt);
-                    if (idEdge >=0) {
-                        roadName = shortestPath.getEdgeName(idEdge);
-                        lenRoad += shortestPath.getEdgeLength(idEdge);
-                        if ((!formerRoadName.equals(roadName)) || (!it.hasNext()))
-                            if (numFormerPt2 != -1) {
-                                leftRight = determineLeftRight(numFormerPt2, numFormerPt, numPt);
-                            }
-                            else {
-                                leftRight = "tout-droit";
-                            }
-                            appWindow.getPanelInformations().addRoute(roadName + " (" + convertUnitDistance(lenRoad, 1) + ")");
-                            lenTotal += lenRoad;
-                            lenRoad=0;
+        for (Iterator it = path.iterator(); it.hasNext(); ) {
+            pos = (ItineraryState) it.next();
+            numPt = pos.node;
+            if (numFormerPt >= 0) {
+                idEdge = shortestPath.findEdge(numPt, numFormerPt);
+                if (idEdge >=0) {
+                    roadName = shortestPath.getEdgeName(idEdge);
+                    lenRoad += shortestPath.getEdgeLength(idEdge);
+                    if ((!formerRoadName.equals(roadName)) || (!it.hasNext()))
+                        if (numFormerPt2 != -1) {
+                            leftRight = determineLeftRight(numFormerPt2, numFormerPt, numPt);
                         }
-                        formerRoadName = roadName;
+                        else {
+                            leftRight = "tout-droit";
+                        }
+                        appWindow.getPanelInformations().addRoute(roadName + " (" + convertUnitDistance(lenRoad, 1) + ")");
+                        lenTotal += lenRoad;
+                        lenRoad=0;
                     }
-                    else if (numFormerPt != -1){
-                        appWindow.getPanelInformations().addRoute("Erreur : Route non trouv\u00e9e ! (" + numFormerPt + "|" + numPt + ")");
-                    }
-                    numFormerPt2 = numFormerPt;
-                    numFormerPt = numPt;
+                    formerRoadName = roadName;
                 }
-                appWindow.getPanelInformations().setPathLength(convertUnitDistance(lenTotal,1));
-
+                else if (numFormerPt != -1){
+                    appWindow.getPanelInformations().addRoute("Erreur : Route non trouv\u00e9e ! (" + numFormerPt + "|" + numPt + ")");
+                }
+                numFormerPt2 = numFormerPt;
+                numFormerPt = numPt;
+            }
+            appWindow.getPanelInformations().setPathLength(convertUnitDistance(lenTotal,1));
     }
 
 

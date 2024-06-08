@@ -35,8 +35,12 @@ public class MapController {
         double adjustedX = (event.getX() + scrollX) / zoomFactor;
         double adjustedY = (event.getY() + scrollY) / zoomFactor;
 
+        Bounds zoomControlBounds = appWindow.getZoomControlBoundsInScene();
 
-        app.updateNearestPoint((int)adjustedX, (int)adjustedY);
+        if (!zoomControlBounds.contains(event.getX(), event.getY())) {
+            // Ignore mouse events on the zoom control
+            app.updateNearestPoint((int)adjustedX, (int)adjustedY);
+        }
     }
 
     public void onMouseClicked(MouseEvent event) {
