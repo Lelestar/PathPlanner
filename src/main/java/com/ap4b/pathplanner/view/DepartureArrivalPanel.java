@@ -140,6 +140,28 @@ public class DepartureArrivalPanel extends HBox {
         }
     }
 
+    public void clearCbDeparture(){
+        cbCityDeparture.setValue(null);
+        cbStreetDeparture.setValue(null);
+        cbPointDeparture.setValue(null);
+    }
+
+    public void clearCbArrival(){
+        cbCityArrival.setValue(null);
+        cbStreetArrival.setValue(null);
+        cbPointArrival.setValue(null);
+    }
+
+    public void setCbDeparture(int point, String road){
+        cbPointDeparture.setValue(Integer.toString(point));
+        cbStreetDeparture.setValue(road);
+    }
+
+    public void setCbArrival(int point, String road){
+        cbPointArrival.setValue(Integer.toString(point));
+        cbStreetArrival.setValue(road);
+    }
+
     public void resetPoints(Direction direction) {
         if (direction == Direction.DEPARTURE) {
             cbPointDeparture.getItems().clear();

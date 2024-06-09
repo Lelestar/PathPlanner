@@ -126,11 +126,54 @@ public class Application {
     public void setDeparturePoint(int departurePoint) {
         this.departurePoint = departurePoint;
         appWindow.getMap().resetItinerary();
+
+        Set roads = roadNetwork.getRoadsList();
+        Iterator itRoads;
+        String roadName="";
+        Boolean found = false;
+        for (itRoads = roads.iterator(); itRoads.hasNext(); ) {
+             roadName = (String) itRoads.next();
+             Vector<Integer> points = roadNetwork.getRoad(roadName).getPoints();
+             for (int j = 0; j < points.size(); j++) {
+                 if (points.elementAt(j) == departurePoint) {
+                     found = true;
+                 }
+             }
+            if(found) {
+                break;
+            }
+        }
+
+        appWindow.getDepartureArrivalPanel().clearCbDeparture();
+
+        appWindow.getDepartureArrivalPanel().setCbDeparture(departurePoint, roadName);
     }
+
 
     public void setArrivalPoint(int arrivalPoint) {
         this.arrivalPoint = arrivalPoint;
         appWindow.getMap().resetItinerary();
+
+        Set roads = roadNetwork.getRoadsList();
+        Iterator itRoads;
+        String roadName="";
+        Boolean found = false;
+        for (itRoads = roads.iterator(); itRoads.hasNext(); ) {
+            roadName = (String) itRoads.next();
+            Vector<Integer> points = roadNetwork.getRoad(roadName).getPoints();
+            for (int j = 0; j < points.size(); j++) {
+                if (points.elementAt(j) == arrivalPoint) {
+                    found = true;
+                }
+            }
+            if(found) {
+                break;
+            }
+        }
+
+        appWindow.getDepartureArrivalPanel().clearCbArrival();
+
+        appWindow.getDepartureArrivalPanel().setCbArrival(arrivalPoint, roadName);
     }
 
     public void searchItineraryFromPanel() {
@@ -297,6 +340,7 @@ public class Application {
         searchItineraryFromMap();
     }
 
+
     public void displayRoadList(){
         appWindow.getPanelInformations().clearRoads();
         //appWindow.getPanelInformations().setMessage(null, null);
@@ -342,15 +386,12 @@ public class Application {
 
 
     private String convertUnitDistance(double px, float zoom) {
-        // Conversion dans l'unite de mesure
-        String unit = "m";
         double m = (double)(px * (double)MAP_SCALE * (double)((double)1 / (double)zoom));
         if (m > 1000) {
             m /= 1000;
-            unit = "km";
         }
         m = ((double) Math.round(m * 100)) / 100;
-        return new String(m + " " + unit);
+        return String.valueOf(m);
     }
 
     private String determineLeftRight(int id1, int id2, int id3) {

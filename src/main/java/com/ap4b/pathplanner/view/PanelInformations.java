@@ -21,10 +21,11 @@ public class PanelInformations extends VBox {
     private ListView<String> listRouteSheet;
     private List<String> routeDetails = new ArrayList<>();
 
-    private String message1, message2, su, pathLength;
+    private String message1, message2, us="Lambert-II", pathLength;
 
-    public String setPathLength(String pathLength){
-        return this.pathLength = pathLength;
+    public void setPathLength(String pathLength){
+        this.pathLength = pathLength;
+        updateInfos();
     }
 
     public PanelInformations(int width, double height, String unitsSystem) {
@@ -71,9 +72,15 @@ public class PanelInformations extends VBox {
         listRouteSheet.getItems().add(route);
     }
 
-    public void updateInfos(List<String> infos) {
+    public void updateInfos() {
         listInfos.getItems().clear();
-        listInfos.getItems().addAll(infos);
+        if (message1!=null) {
+            listInfos.getItems().add(message1);
+        }
+        listInfos.getItems().add("Systeme d'Unites : " + us);
+        if (!(pathLength == null || Double.parseDouble(pathLength)==0.00)){
+            listInfos.getItems().add("Longueur du trajet : "+ pathLength + us);
+        }
     }
 
     public void updateRoads(List<String> roads) {
@@ -91,11 +98,11 @@ public class PanelInformations extends VBox {
     }
 
     // Example method to set messages
-    public void setMessage(String message1, String message2) {
-        clearInfos();
-        updateInfos(List.of(message1, message2));
+    public void setMessage(String message1) {
+        this.message1 = message1;
+        updateInfos();
     }
 
-    public void setLengthPath(String lengthPath){};
 }
+
 
