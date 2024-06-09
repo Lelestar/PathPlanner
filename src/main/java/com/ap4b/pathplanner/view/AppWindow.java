@@ -61,6 +61,7 @@ public class AppWindow {
 
         // Create DepartureArrivalPanel and PanelInformations
         VBox rightPanel = new VBox();
+        rightPanel.getStyleClass().add("right-panel");
         panelInformations = new PanelInformations(INFO_PANEL_WIDTH, primaryStage.getHeight(), "metric");
         departureArrivalPanel = new DepartureArrivalPanel();
         VBox.setMargin(departureArrivalPanel, new javafx.geometry.Insets(0, 0, 0, 10));

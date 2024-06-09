@@ -1,0 +1,184 @@
+/* Button */
+.app-button {
+    -fx-background-color: #4184F3;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 4px 8px;
+    -fx-background-radius: 50px;
+    -fx-border-radius: 50px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 5, 0, 0, 0);
+}
+
+.app-button:hover {
+    /*  10% darker */
+    -fx-background-color: #3769D8;
+}
+
+.app-button:pressed {
+    /*  10% darker */
+    -fx-background-color: #2D5FC3;
+}
+
+/* ComboBox */
+.combo-box {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #9f9f9f;
+    -fx-border-width: 1px;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+}
+
+.combo-box .arrow-button {
+    -fx-background-color: #3769D8;
+    -fx-padding: 8px;
+    -fx-background-radius: 0 8px 8px 0;
+}
+
+.combo-box .arrow-button .arrow {
+    -fx-background-color: white;
+}
+
+.combo-box .list-cell {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-background-radius: 8px;
+}
+
+.combo-box .list-cell:hover {
+    -fx-background-color: #3769D8;
+    -fx-text-fill: white;
+}
+
+.combo-box .list-cell:filled:selected {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+}
+
+/* ListView */
+.list-view {
+    -fx-background-color: white;
+    -fx-border-color: #9f9f9f;
+    -fx-border-width: 1px;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    /* remove cell selection */
+    -fx-cell-hover-color: transparent;
+}
+
+.list-view .list-cell {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-background-radius: 8px;
+}
+
+.right-panel {
+    -fx-background-color: white;
+}
+
+/* ScrollBar */
+.scroll-bar {
+    -fx-background-color: white;
+    -fx-border-color: transparent;
+}
+
+/* Remove the up and down buttons */
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #9f9f9f;
+    -fx-background-radius: 8px;
+}
+
+.scroll-pane {
+    -fx-background-color: white;
+}
+
+/* Slider */
+.slider .thumb {
+    -fx-background-color: #3769D8;
+    -fx-background-radius: 8px;
+}
+
+.slider .thumb:hover {
+    -fx-background-color: #2D5FC3;
+}
+
+.slider .thumb:pressed {
+    -fx-background-color: #1F4FAE;
+}
+
+.slider .track {
+    -fx-background-color: white;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-border-color: #9f9f9f;
+}
+
+/* ZoomControl */
+.zoom-control {
+    -fx-background-color: white;
+    -fx-border-color: #9f9f9f;
+    -fx-border-width: 1px;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+}
+
+.zoom-button {
+    -fx-background-color: #3769D8;
+    -fx-text-fill: white;
+    -fx-background-radius: 50px;
+    -fx-border-radius: 50px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 5, 0, 0, 0);
+    -fx-min-width: 28px;
+    -fx-min-height: 28px;
+    -fx-max-width: 28px;
+    -fx-max-height: 28px;
+}
+
+/* MenuBar */
+.menu-bar {
+    -fx-background-color: white;
+    -fx-border-color: white white #9f9f9f white;
+    -fx-border-width: 1px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 10, 0, 0, 0);
+}
+
+.menu-bar .menu {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+}
+
+.menu-bar .menu:hover {
+    -fx-background-color: #3769D8;
+    -fx-text-fill: white;
+}
+
+.menu-bar .menu .label {
+    -fx-text-fill: black;
+}
+
+.menu-item {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-background-radius: 8px;
+}
+
+.menu-item:hover {
+    -fx-background-color: #3769D8;
+    -fx-text-fill: white;
+}
+
+.menu-bar .menu .menu-item:hover .label {
+    -fx-text-fill: white;
+}
+
+.menu-bar .menu .menu-item:filled:selected {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+}

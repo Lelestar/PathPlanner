@@ -33,11 +33,13 @@ public class ZoomControl extends HBox {
     public ZoomControl() {
         setPadding(new Insets(10, 0, 40, 10));
         setAlignment(Pos.CENTER); // Ensures that controls are aligned to the center
-        setSpacing(10);
+        setSpacing(8);
         setMaxWidth(300);
 
         btnZoomIn = new Button("+");
         btnZoomOut = new Button("-");
+        btnZoomIn.getStyleClass().add("zoom-button");
+        btnZoomOut.getStyleClass().add("zoom-button");
         btnZoomIn.setMinSize(20, 20);
         btnZoomOut.setMinSize(20, 20);
 

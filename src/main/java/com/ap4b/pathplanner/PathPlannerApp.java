@@ -5,6 +5,8 @@ import com.ap4b.pathplanner.view.AppWindow;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.util.Objects;
+
 public class PathPlannerApp extends javafx.application.Application {
 
     private final static String DATA_PATH = "/com/ap4b/pathplanner/data/";
@@ -23,6 +25,7 @@ public class PathPlannerApp extends javafx.application.Application {
         appWindow = new AppWindow(app, primaryStage);
         app.setAppWindow(appWindow); // Set the AppWindow in the model
         Scene scene = new Scene(appWindow.getContent(), 1200, 700);
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/com/ap4b/pathplanner/styles.css")).toExternalForm());
         primaryStage.setTitle("Path Planner");
         primaryStage.setScene(scene);
         primaryStage.show();

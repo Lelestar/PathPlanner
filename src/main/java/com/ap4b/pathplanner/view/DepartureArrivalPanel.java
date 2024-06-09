@@ -40,6 +40,7 @@ public class DepartureArrivalPanel extends HBox {
         cbStreetArrival = new ComboBox<>();
         cbPointArrival = new ComboBox<>();
         btnGo = new Button("Go");
+        btnGo.getStyleClass().add("app-button");
 
         GridPane grid = new GridPane();
         grid.setHgap(10);

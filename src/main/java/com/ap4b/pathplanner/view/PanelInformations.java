@@ -38,8 +38,8 @@ public class PanelInformations extends VBox {
 
         // Information List
         listInfos = new ListView<>();
-        listInfos.setPrefSize(width, 150);
-        listInfos.setMinHeight(150);
+        listInfos.setPrefSize(width, 100);
+        listInfos.setMinHeight(100);
         getChildren().add(listInfos);
 
         // Route Sheet Label
