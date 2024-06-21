@@ -137,6 +137,9 @@ public class DepartureArrivalPanel extends HBox {
             cbStreetDeparture.getItems().clear();
         } else if (direction == Direction.ARRIVAL) {
             cbStreetArrival.getItems().clear();
+        } else {
+            cbStreetDeparture.getItems().clear();
+            cbStreetArrival.getItems().clear();
         }
     }
 
@@ -168,6 +171,11 @@ public class DepartureArrivalPanel extends HBox {
         } else if (direction == Direction.ARRIVAL) {
             cbPointArrival.getItems().clear();
         }
+    }
+
+    public void resetCities() {
+        cbCityDeparture.getItems().clear();
+        cbCityArrival.getItems().clear();
     }
 
     public int getPointNumber(Direction direction) {

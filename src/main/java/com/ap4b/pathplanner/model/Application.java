@@ -4,17 +4,15 @@ import com.ap4b.pathplanner.view.AppWindow;
 import com.ap4b.pathplanner.view.DepartureArrivalPanel;
 import javafx.scene.control.Alert;
 
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.Vector;
+import java.io.File;
+import java.util.*;
 import java.lang.Math;
 
 public class Application {
     // Constants
     private final String ImagesPath = "/com/ap4b/pathplanner/img/";
-    private final String mapLink;
-    private final double MAP_SCALE = 18.388125;
+    private String mapLink;
+    private final double MAP_SCALE =18.388125; // 1.89 for the second map
     private final float INITIAL_ZOOM = (float) 0.5;
     private final Point LAMBERT_TOP_LEFT = new Point(897990, 2324046);
     private final Point LAMBERT_BOTTOM_RIGHT = new Point(971518, 2272510);

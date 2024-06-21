@@ -44,7 +44,7 @@ public class AppWindow {
         // Create Menu
         MenuFX menuBar = new MenuFX();
         content.setTop(menuBar);
-        menuController = new MenuController(menuBar);
+        menuController = new MenuController(menuBar, app, this);
 
         // Create Map
         map = new Map(app.getMapLink());
@@ -105,5 +105,9 @@ public class AppWindow {
 
     public void resetMessage(){
 
+    }
+
+    public Stage getPrimaryStage() {
+        return primaryStage;
     }
 }

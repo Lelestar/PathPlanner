@@ -55,6 +55,20 @@ public class Map extends Pane {
         scrollPane = new ScrollPane();
         canvas = new Canvas();
 
+        this.getChildren().add(scrollPane);
+
+        loadImage(imgPath);
+
+        scrollPane.hvalueProperty().addListener((obs, oldVal, newVal) -> draw());
+        scrollPane.vvalueProperty().addListener((obs, oldVal, newVal) -> draw());
+    }
+
+    /**
+     * Loads an image from the specified path and sets it as the map image.
+     *
+     * @param imgPath the path to the map image resource
+     */
+    private void loadImage(String imgPath) {
         try {
             URL resource = getClass().getResource(imgPath);
             if (resource == null) {
@@ -72,7 +86,6 @@ public class Map extends Pane {
                     scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
                     scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
                     draw();
-                    this.getChildren().add(scrollPane);
                 }
             });
 
@@ -86,11 +99,7 @@ public class Map extends Pane {
             e.printStackTrace();
             throw new RuntimeException("Failed to initialize map.", e);
         }
-
-        scrollPane.hvalueProperty().addListener((obs, oldVal, newVal) -> draw());
-        scrollPane.vvalueProperty().addListener((obs, oldVal, newVal) -> draw());
     }
-
 
     /**
      * Update zoom.
@@ -298,6 +307,17 @@ public class Map extends Pane {
 
     public void setScaleSize(int scaleSize) {
         scaleSizePx = scaleSize;
+    }
+
+    /**
+     * Updates the map with a new image.
+     *
+     * @param imgPath the path to the new map image resource
+     */
+    public void updateMap(String imgPath) {
+        loadImage(imgPath);
+        resetItinerary();
+        draw();
     }
 }
 

@@ -17,21 +17,35 @@ public class DepartureArrivalPanelController {
 
     private void addEventHandlers() {
         departureArrivalPanel.getCbCityDeparture().setOnAction(
-                event -> app.fillRoadsLists(
-                        departureArrivalPanel.getCbCityDeparture().getValue(),
-                        DepartureArrivalPanel.Direction.DEPARTURE)
+                event -> {
+                    if (departureArrivalPanel.getCbCityDeparture().getValue() != null) {
+                        app.fillRoadsLists(
+                                departureArrivalPanel.getCbCityDeparture().getValue(),
+                                DepartureArrivalPanel.Direction.DEPARTURE
+                        );
+                    }
+                }
         );
+
         departureArrivalPanel.getCbCityArrival().setOnAction(
-                event -> app.fillRoadsLists(
-                        departureArrivalPanel.getCbCityArrival().getValue(),
-                        DepartureArrivalPanel.Direction.ARRIVAL)
+                event -> {
+                    if (departureArrivalPanel.getCbCityArrival().getValue() != null) {
+                        app.fillRoadsLists(
+                                departureArrivalPanel.getCbCityArrival().getValue(),
+                                DepartureArrivalPanel.Direction.ARRIVAL
+                        );
+                    }
+                }
         );
+
         departureArrivalPanel.getCbStreetDeparture().setOnAction(
                 event -> app.fillPointsLists(DepartureArrivalPanel.Direction.DEPARTURE)
         );
+
         departureArrivalPanel.getCbStreetArrival().setOnAction(
                 event -> app.fillPointsLists(DepartureArrivalPanel.Direction.ARRIVAL)
         );
+
         departureArrivalPanel.getGoButton().setOnAction(
                 event -> app.readDepartureArrivalPanelForItinerary()
         );

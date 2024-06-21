@@ -1,9 +1,17 @@
 package com.ap4b.pathplanner.controller;
 
+import com.ap4b.pathplanner.PathPlannerApp;
+import com.ap4b.pathplanner.model.Application;
+import com.ap4b.pathplanner.view.AppWindow;
+import com.ap4b.pathplanner.view.FileSelectionWindow;
 import com.ap4b.pathplanner.view.MenuFX;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.MenuItem;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+
+import java.io.File;
 
 /**
  * Controls the menu interactions in the Path Planner application.
@@ -11,9 +19,13 @@ import javafx.scene.control.MenuItem;
 public class MenuController implements EventHandler<ActionEvent> {
 
     private MenuFX menu;
+    private Application app;
+    private AppWindow appWindow;
 
-    public MenuController(MenuFX menu) {
+    public MenuController(MenuFX menu, Application app, AppWindow appWindow) {
         this.menu = menu;
+        this.app = app;
+        this.appWindow = appWindow;
         attachHandlers();
     }
 
@@ -45,8 +57,7 @@ public class MenuController implements EventHandler<ActionEvent> {
     }
 
     private void handleChangeMap() {
-        System.out.println("Changing Map...");
-        // Add logic to change map
+        FileSelectionWindow.display(filePath -> app.changeMap(filePath));
     }
 
     private void handleAbout() {
