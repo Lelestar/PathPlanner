@@ -48,6 +48,8 @@ public class MenuController implements EventHandler<ActionEvent> {
             handleAbout();
         } else if (source == menu.getExitItem()) {
             handleExit();
+        } else if (source == menu.getThemeItem()) {
+            handleSwitchTheme();
         }
     }
 
@@ -62,11 +64,16 @@ public class MenuController implements EventHandler<ActionEvent> {
 
     private void handleAbout() {
         System.out.println("Showing About Dialog...");
-        // Add logic to show about dialog
+        app.about();
     }
 
     private void handleExit() {
         System.out.println("Exiting Application...");
         System.exit(0);
+    }
+
+    private void handleSwitchTheme(){
+        System.out.println("Switching Theme...");
+        app.switchTheme();
     }
 }

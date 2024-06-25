@@ -1,10 +1,10 @@
 package com.ap4b.pathplanner.model;
 
+import com.ap4b.pathplanner.view.AboutWindow;
 import com.ap4b.pathplanner.view.AppWindow;
 import com.ap4b.pathplanner.view.DepartureArrivalPanel;
 import javafx.scene.control.Alert;
 
-import java.io.File;
 import java.util.*;
 import java.lang.Math;
 
@@ -26,6 +26,8 @@ public class Application {
 
     // View
     private AppWindow appWindow;
+
+    private boolean themeIsLight = true;
 
     // Road Network
     private RoadNetwork roadNetwork;
@@ -414,5 +416,41 @@ public class Application {
             return "droite";
         else
             return "tout_droit";
+    }
+
+    public void about(){
+        new AboutWindow();
+    }
+
+    public void changeMap(String filePath){
+        roadNetwork.parseXml(filePath);
+
+        this.mapLink = ImagesPath + roadNetwork.getImageFileName();
+
+        shortestPath.init(roadNetwork, INITIAL_ZOOM);
+
+        appWindow.getDepartureArrivalPanel().resetCities();
+        appWindow.getDepartureArrivalPanel().resetStreets(DepartureArrivalPanel.Direction.BOTH);
+        appWindow.getDepartureArrivalPanel().resetPoints(DepartureArrivalPanel.Direction.BOTH);
+
+        fillCitiesLists();
+        fillRoadsLists("All", DepartureArrivalPanel.Direction.BOTH);
+        fillPointsLists(DepartureArrivalPanel.Direction.BOTH);
+
+        appWindow.getMap().updateMap(mapLink);
+        appWindow.getMap().setScaleSize(SCALE_SIZE_PX);
+        appWindow.getMap().setScaleLabel(convertUnitDistance(SCALE_SIZE_PX, zoomPercentage));
+    }
+
+    public void switchTheme(){
+        if (themeIsLight){
+            appWindow.getPrimaryStage().getScene().getStylesheets().remove(Objects.requireNonNull(getClass().getResource("/com/ap4b/pathplanner/style_light.css")).toExternalForm());
+            appWindow.getPrimaryStage().getScene().getStylesheets().add(Objects.requireNonNull(getClass().getResource("/com/ap4b/pathplanner/style_dark.css")).toExternalForm());
+            themeIsLight = false;
+        } else {
+            appWindow.getPrimaryStage().getScene().getStylesheets().remove(Objects.requireNonNull(getClass().getResource("/com/ap4b/pathplanner/style_dark.css")).toExternalForm());
+            appWindow.getPrimaryStage().getScene().getStylesheets().add(Objects.requireNonNull(getClass().getResource("/com/ap4b/pathplanner/style_light.css")).toExternalForm());
+            themeIsLight = true;
+        }
     }
 }

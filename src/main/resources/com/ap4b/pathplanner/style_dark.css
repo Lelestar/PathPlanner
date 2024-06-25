@@ -1,3 +1,21 @@
+/* Text */
+.root {
+    -fx-font-family: "Inter Regular";
+}
+
+.app-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-font-family: "Inter Semi Bold";
+}
+
+.app-text {
+    -fx-font-size: 12px;
+    -fx-text-fill: white;
+}
+
+
 /* Button */
 .app-button {
     -fx-background-color: #4184F3;
@@ -22,8 +40,8 @@
 
 /* ComboBox */
 .combo-box {
-    -fx-background-color: #FFFFFF;
-    -fx-border-color: #9f9f9f;
+    -fx-background-color: #333333;
+    -fx-border-color: #888888;
     -fx-border-width: 1px;
     -fx-background-radius: 8px;
     -fx-border-radius: 8px;
@@ -40,25 +58,25 @@
 }
 
 .combo-box .list-cell {
-    -fx-background-color: white;
-    -fx-text-fill: black;
+    -fx-background-color: #333333;
+    -fx-text-fill: white;
     -fx-background-radius: 8px;
 }
 
 .combo-box .list-cell:hover {
-    -fx-background-color: #3769D8;
+    -fx-background-color: #555555;
     -fx-text-fill: white;
 }
 
 .combo-box .list-cell:filled:selected {
-    -fx-background-color: white;
-    -fx-text-fill: black;
+    -fx-background-color: #444444;
+    -fx-text-fill: white;
 }
 
 /* ListView */
 .list-view {
-    -fx-background-color: white;
-    -fx-border-color: #9f9f9f;
+    -fx-background-color: #333333;
+    -fx-border-color: #888888;
     -fx-border-width: 1px;
     -fx-background-radius: 8px;
     -fx-border-radius: 8px;
@@ -67,18 +85,18 @@
 }
 
 .list-view .list-cell {
-    -fx-background-color: white;
-    -fx-text-fill: black;
+    -fx-background-color: #333333;
+    -fx-text-fill: white;
     -fx-background-radius: 8px;
 }
 
 .right-panel {
-    -fx-background-color: white;
+    -fx-background-color: #333333;
 }
 
 /* ScrollBar */
 .scroll-bar {
-    -fx-background-color: white;
+    -fx-background-color: #333333;
     -fx-border-color: transparent;
 }
 
@@ -89,12 +107,12 @@
 }
 
 .scroll-bar .thumb {
-    -fx-background-color: #9f9f9f;
+    -fx-background-color: #888888;
     -fx-background-radius: 8px;
 }
 
 .scroll-pane {
-    -fx-background-color: white;
+    -fx-background-color: #333333;
 }
 
 /* Slider */
@@ -112,16 +130,16 @@
 }
 
 .slider .track {
-    -fx-background-color: white;
+    -fx-background-color: #444444;
     -fx-background-radius: 8px;
     -fx-border-radius: 8px;
-    -fx-border-color: #9f9f9f;
+    -fx-border-color: #888888;
 }
 
 /* ZoomControl */
 .zoom-control {
-    -fx-background-color: white;
-    -fx-border-color: #9f9f9f;
+    -fx-background-color: #333333;
+    -fx-border-color: #888888;
     -fx-border-width: 1px;
     -fx-background-radius: 8px;
     -fx-border-radius: 8px;
@@ -132,7 +150,7 @@
     -fx-text-fill: white;
     -fx-background-radius: 50px;
     -fx-border-radius: 50px;
-    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 5, 0, 0, 0);
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.5), 5, 0, 0, 0);
     -fx-min-width: 28px;
     -fx-min-height: 28px;
     -fx-max-width: 28px;
@@ -141,36 +159,36 @@
 
 /* MenuBar */
 .menu-bar {
-    -fx-background-color: white;
-    -fx-border-color: white white #9f9f9f white;
+    -fx-background-color: #333333;
+    -fx-border-color: #444444 #444444 #888888 #444444;
     -fx-border-width: 1px;
-    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 10, 0, 0, 0);
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.5), 10, 0, 0, 0);
 }
 
 .menu-bar .menu {
-    -fx-background-color: white;
-    -fx-text-fill: black;
+    -fx-background-color: #333333;
+    -fx-text-fill: white;
     -fx-background-radius: 8px;
     -fx-border-radius: 8px;
 }
 
 .menu-bar .menu:hover {
-    -fx-background-color: #3769D8;
+    -fx-background-color: #555555;
     -fx-text-fill: white;
 }
 
 .menu-bar .menu .label {
-    -fx-text-fill: black;
+    -fx-text-fill: white;
 }
 
 .menu-item {
-    -fx-background-color: white;
-    -fx-text-fill: black;
+    -fx-background-color: #333333;
+    -fx-text-fill: white;
     -fx-background-radius: 8px;
 }
 
 .menu-item:hover {
-    -fx-background-color: #3769D8;
+    -fx-background-color: #555555;
     -fx-text-fill: white;
 }
 
@@ -179,6 +197,10 @@
 }
 
 .menu-bar .menu .menu-item:filled:selected {
-    -fx-background-color: white;
-    -fx-text-fill: black;
+    -fx-background-color: #444444;
+    -fx-text-fill: white;
+}
+
+.context-menu {
+    -fx-background-color: #333333;
 }

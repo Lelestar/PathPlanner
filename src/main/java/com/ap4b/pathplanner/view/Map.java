@@ -187,8 +187,8 @@ public class Map extends Pane {
         int infoCount = point.getInfos().size();
         int rectHeight = padding * 2 + lineHeight * infoCount;
 
-        double x = (point.getX() * zoomFactor) - scrollX;
-        double y = (point.getY() * zoomFactor) - scrollY;
+        double x = point.getX() * zoomFactor;
+        double y = point.getY() * zoomFactor;
 
         // Save the current state of the graphics context
         gc.save();
@@ -204,7 +204,7 @@ public class Map extends Pane {
         gc.strokeRect(x / zoomFactor, (y - rectHeight) / zoomFactor, 200 / zoomFactor, rectHeight / zoomFactor);
 
         gc.setFill(Color.BLACK);
-        gc.setFont(Font.font("Arial", FontWeight.BOLD, 10 / zoomFactor));
+        gc.setFont(Font.font("Inter Regular", FontWeight.NORMAL, 10 / zoomFactor));
         for (int i = 0; i < infoCount; i++) {
             gc.fillText(point.getInfos().elementAt(i), (x + padding) / zoomFactor, (y - rectHeight + padding + lineHeight * (i + 1)) / zoomFactor);
         }
@@ -242,7 +242,7 @@ public class Map extends Pane {
 
         // Draw scale text
         gc.setFill(SCALE_COLOR);
-        gc.setFont(Font.font("Arial", FontWeight.BOLD, 10 / zoomFactor));
+        gc.setFont(Font.font("Inter Regular", FontWeight.BOLD, 10 / zoomFactor));
         gc.fillText(scaleLabel, startX, startY - 5 / zoomFactor);
 
         gc.restore(); // Restore the saved state

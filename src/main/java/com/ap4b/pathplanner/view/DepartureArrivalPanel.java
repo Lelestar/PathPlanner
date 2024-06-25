@@ -28,10 +28,10 @@ public class DepartureArrivalPanel extends HBox {
         setMaxWidth(300);
 
         Label lblDeparture = new Label("Departure");
-        lblDeparture.setFont(Font.font("Arial",FontWeight.BOLD, 14));
+        lblDeparture.getStyleClass().add("app-label");
 
         Label lblArrival = new Label("Arrival");
-        lblArrival.setFont(Font.font("Arial",FontWeight.BOLD, 14));
+        lblArrival.getStyleClass().add("app-label");
 
         cbCityDeparture = new ComboBox<>();
         cbStreetDeparture = new ComboBox<>();
@@ -57,15 +57,35 @@ public class DepartureArrivalPanel extends HBox {
 
         // Add departure section
         grid.add(lblDeparture, 0, 0, 2, 1);  // Span across both columns
-        grid.addRow(1, new Label("City"), cbCityDeparture);
-        grid.addRow(2, new Label("Street"), cbStreetDeparture);
-        grid.addRow(3, new Label("Point"), cbPointDeparture);
+
+        Label lblCityDeparture = new Label("City");
+        lblCityDeparture.getStyleClass().add("app-text");
+
+        Label lblStreetDeparture = new Label("Street");
+        lblStreetDeparture.getStyleClass().add("app-text");
+
+        Label lblPointDeparture = new Label("Point");
+        lblPointDeparture.getStyleClass().add("app-text");
+
+        grid.addRow(1, lblCityDeparture, cbCityDeparture);
+        grid.addRow(2, lblStreetDeparture, cbStreetDeparture);
+        grid.addRow(3, lblPointDeparture, cbPointDeparture);
 
         // Add arrival section
         grid.add(lblArrival, 0, 4, 2, 1);  // Span across both columns
-        grid.addRow(5, new Label("City"), cbCityArrival);
-        grid.addRow(6, new Label("Street"), cbStreetArrival);
-        grid.addRow(7, new Label("Point"), cbPointArrival);
+
+        Label lblCityArrival = new Label("City");
+        lblCityArrival.getStyleClass().add("app-text");
+
+        Label lblStreetArrival = new Label("Street");
+        lblStreetArrival.getStyleClass().add("app-text");
+
+        Label lblPointArrival = new Label("Point");
+        lblPointArrival.getStyleClass().add("app-text");
+
+        grid.addRow(5, lblCityArrival, cbCityArrival);
+        grid.addRow(6, lblStreetArrival, cbStreetArrival);
+        grid.addRow(7, lblPointArrival, cbPointArrival);
 
         // Add go button
         grid.add(btnGo, 0, 8, 2, 1);

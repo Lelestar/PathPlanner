@@ -17,11 +17,11 @@ public class AboutWindow extends Stage {
         root.setAlignment(Pos.CENTER);
 
         // Create a label and add it to the root pane
-        Label lblInfo = new Label("Coucou");
+        Label lblInfo = new Label("Coucou, nous sommes étudiants en Informatique et nous avons réalisé cette application !");
         root.getChildren().add(lblInfo);
 
         // Setup the Scene
-        Scene scene = new Scene(root, 300, 200);
+        Scene scene = new Scene(root, 500, 400);
         setScene(scene);
 
         // Position the window in the center of the screen

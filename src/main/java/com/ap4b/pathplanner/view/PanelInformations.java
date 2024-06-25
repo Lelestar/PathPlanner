@@ -33,8 +33,8 @@ public class PanelInformations extends VBox {
         setPadding(new Insets(10));
 
         // Information Label
-        lblInfos = new Label("Informations:");
-        lblInfos.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+        lblInfos = new Label("Informations");
+        lblInfos.getStyleClass().add("app-label");
         getChildren().add(lblInfos);
 
         // Information List
@@ -44,8 +44,8 @@ public class PanelInformations extends VBox {
         getChildren().add(listInfos);
 
         // Route Sheet Label
-        lblRouteSheet = new Label("Route Sheet:");
-        lblRouteSheet.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+        lblRouteSheet = new Label("Route Sheet");
+        lblRouteSheet.getStyleClass().add("app-label");
         getChildren().add(lblRouteSheet);
 
         // Route Sheet List
