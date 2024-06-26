@@ -1,3 +1,7 @@
+.root-background {
+    -fx-background-color: #333333;
+}
+
 /* Text */
 .root {
     -fx-font-family: "Inter Regular";
@@ -74,7 +78,7 @@
 }
 
 /* ListView */
-.list-view {
+.list-view, .list-view-2{
     -fx-background-color: #333333;
     -fx-border-color: #888888;
     -fx-border-width: 1px;
@@ -88,6 +92,16 @@
     -fx-background-color: #333333;
     -fx-text-fill: white;
     -fx-background-radius: 8px;
+}
+
+.list-view-2 .list-cell:hover {
+    -fx-background-color: #555555;
+    -fx-text-fill: white;
+}
+
+.list-view-2 .list-cell:filled:selected {
+    -fx-background-color: #555555;
+    -fx-text-fill: white;
 }
 
 .right-panel {

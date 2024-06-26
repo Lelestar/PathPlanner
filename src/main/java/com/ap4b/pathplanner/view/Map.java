@@ -34,6 +34,9 @@ public class Map extends Pane {
     private final int ITINERARY_WIDTH = 5;
     private final int POINT_SIZE = 15;
 
+    private final float ZOOM_MIN = (float) 0.1;
+    private final float ZOOM_MAX = (float) 1;
+
     private Point nearestPoint = null;
     private boolean itineraryUniquePointIsDeparturePoint = true;
 
@@ -53,6 +56,7 @@ public class Map extends Pane {
      */
     public Map(String imgPath) {
         scrollPane = new ScrollPane();
+        scrollPane.getStyleClass().add("scroll-pane");
         canvas = new Canvas();
 
         this.getChildren().add(scrollPane);
@@ -318,6 +322,74 @@ public class Map extends Pane {
         loadImage(imgPath);
         resetItinerary();
         draw();
+    }
+
+    public void recenterViewOnItinerary() {
+        if (itinerary.isEmpty()) {
+            return;
+        }
+
+        double minX = Double.MAX_VALUE, minY = Double.MAX_VALUE;
+        double maxX = Double.MIN_VALUE, maxY = Double.MIN_VALUE;
+
+        // Calculate the bounding box of the itinerary
+        for (Point point : itinerary) {
+            if (point.getX() < minX) {
+                minX = point.getX();
+            }
+            if (point.getY() < minY) {
+                minY = point.getY();
+            }
+            if (point.getX() > maxX) {
+                maxX = point.getX();
+            }
+            if (point.getY() > maxY) {
+                maxY = point.getY();
+            }
+        }
+
+        double centerX = (minX + maxX) / 2;
+        double centerY = (minY + maxY) / 2;
+
+        double itineraryWidth = maxX - minX;
+        double itineraryHeight = maxY - minY;
+
+        double viewportWidth = scrollPane.getViewportBounds().getWidth();
+        double viewportHeight = scrollPane.getViewportBounds().getHeight();
+
+        // Add some margin around the itinerary
+        double margin = 20; // 20 pixels margin
+        itineraryWidth += margin * 2;
+        itineraryHeight += margin * 2;
+
+        // Calculate the optimal zoom factor to fit the entire itinerary in the viewport
+        double zoomFactorWidth = viewportWidth / itineraryWidth;
+        double zoomFactorHeight = viewportHeight / itineraryHeight;
+        double optimalZoomFactor = Math.min(zoomFactorWidth, zoomFactorHeight);
+
+        // Ensure the new zoom factor is within allowed bounds
+        optimalZoomFactor = Math.max(ZOOM_MIN, Math.min(optimalZoomFactor, ZOOM_MAX));
+
+        // Apply the new zoom factor
+        updateZoom(optimalZoomFactor);
+
+        // Calculate the new center coordinates with the new zoom factor
+        double newCenterX = centerX * optimalZoomFactor;
+        double newCenterY = centerY * optimalZoomFactor;
+
+        double canvasWidth = canvas.getWidth();
+        double canvasHeight = canvas.getHeight();
+
+        double newHValue = (newCenterX - viewportWidth / 2) / (canvasWidth - viewportWidth);
+        double newVValue = (newCenterY - viewportHeight / 2) / (canvasHeight - viewportHeight);
+
+        // Clamp the values to be between 0 and 1
+        newHValue = Math.max(0, Math.min(newHValue, 1));
+        newVValue = Math.max(0, Math.min(newVValue, 1));
+
+        // Apply the new scroll values
+        scrollPane.setHvalue(newHValue);
+        scrollPane.setVvalue(newVValue);
     }
 }
 

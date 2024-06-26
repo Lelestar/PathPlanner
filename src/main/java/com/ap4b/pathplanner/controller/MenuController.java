@@ -59,7 +59,13 @@ public class MenuController implements EventHandler<ActionEvent> {
     }
 
     private void handleChangeMap() {
-        FileSelectionWindow.display(filePath -> app.changeMap(filePath));
+        String cssPath;
+        if (app.getThemeIsLight()) {
+            cssPath = "/com/ap4b/pathplanner/style_light.css";
+        } else {
+            cssPath = "/com/ap4b/pathplanner/style_dark.css";
+        }
+        FileSelectionWindow.display(filePath -> app.changeMap(filePath), cssPath);
     }
 
     private void handleAbout() {

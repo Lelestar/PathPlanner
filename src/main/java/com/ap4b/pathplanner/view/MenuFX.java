@@ -31,7 +31,7 @@ public class MenuFX extends MenuBar {
         theme = new MenuItem("Switch Theme");
 
         // Add items to File Menu
-        fileMenu.getItems().addAll(fileExportItinerary, fileChangeMap, exit, theme);
+        fileMenu.getItems().addAll(fileExportItinerary, fileChangeMap, theme, exit);
 
         // Initialize and set Help Menu Items
         MenuItem controlsItem = new MenuItem("Controls");

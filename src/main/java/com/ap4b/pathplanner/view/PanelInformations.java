@@ -64,7 +64,7 @@ public class PanelInformations extends VBox {
                 "System of units: " + unitsSystem
         );
 
-        listRouteSheet.getItems().add("No route selected.");
+        boolean add = listRouteSheet.getItems().add("No itinerary selected.");
     }
 
     public void addRoute(String route) {

@@ -13,13 +13,13 @@ public class Application {
     private final String ImagesPath = "/com/ap4b/pathplanner/img/";
     private String mapLink;
     private final double MAP_SCALE =18.388125; // 1.89 for the second map
-    private final float INITIAL_ZOOM = (float) 0.5;
+    private final float INITIAL_ZOOM = 0.5f;
     private final Point LAMBERT_TOP_LEFT = new Point(897990, 2324046);
     private final Point LAMBERT_BOTTOM_RIGHT = new Point(971518, 2272510);
     private final Point PIXELS_BOTTOM_RIGHT = new Point(4000, 2801);
     public final static float ZOOM_NOTCH = (float) 0.05;
     private float zoomPercentage = INITIAL_ZOOM;
-    private float oldZoom = INITIAL_ZOOM;
+    private float oldZoom = -1;
     private final float ZOOM_MIN = (float) 0.1;
     private final float ZOOM_MAX = (float) 1;
     private final int SCALE_SIZE_PX = 50;
@@ -61,10 +61,15 @@ public class Application {
         fillPointsLists(DepartureArrivalPanel.Direction.BOTH);
         appWindow.getMap().setScaleSize(SCALE_SIZE_PX);
         appWindow.getMap().setScaleLabel(convertUnitDistance(SCALE_SIZE_PX, zoomPercentage));
+        setZoom();
     }
 
     public String getMapLink() {
         return mapLink;
+    }
+
+    public float getZoomPercentage() {
+        return zoomPercentage;
     }
 
     public void fillCitiesLists() {
@@ -197,6 +202,7 @@ public class Application {
                 pos = (ItineraryState) it.next();
                 appWindow.getMap().addPoint(shortestPath.getNodeCoords(pos.node));
             }
+            appWindow.getMap().recenterViewOnItinerary();
             displayRoadList();
         }
         /**else {
@@ -227,6 +233,7 @@ public class Application {
                 pos = (ItineraryState) it.next();
                 appWindow.getMap().addPoint(shortestPath.getNodeCoords(pos.node));
             }
+            appWindow.getMap().recenterViewOnItinerary();
             displayRoadList();
         }
     }
@@ -309,6 +316,7 @@ public class Application {
     public void setZoomByValue(float value){
         zoomPercentage = value;
         setZoom();
+        appWindow.getMap().setScaleLabel(convertUnitDistance(SCALE_SIZE_PX, zoomPercentage));
     }
 
     public void setZoom(){
@@ -317,8 +325,6 @@ public class Application {
         if (oldZoom != zoomPercentage) {
             appWindow.getZoomControl().setZoomSlider(zoomPercentage);
             appWindow.getMap().updateZoom(zoomPercentage);
-            //shortestPath.init(roadNetwork, zoomPercentage);
-            //searchItineraryFromPanel();
         }
     }
 
@@ -419,7 +425,13 @@ public class Application {
     }
 
     public void about(){
-        new AboutWindow();
+        String cssPath;
+        if (themeIsLight){
+            cssPath = "/com/ap4b/pathplanner/style_light.css";
+        } else {
+            cssPath = "/com/ap4b/pathplanner/style_dark.css";
+        }
+        new AboutWindow(cssPath);
     }
 
     public void changeMap(String filePath){
@@ -452,5 +464,9 @@ public class Application {
             appWindow.getPrimaryStage().getScene().getStylesheets().add(Objects.requireNonNull(getClass().getResource("/com/ap4b/pathplanner/style_light.css")).toExternalForm());
             themeIsLight = true;
         }
+    }
+
+    public boolean getThemeIsLight() {
+        return themeIsLight;
     }
 }

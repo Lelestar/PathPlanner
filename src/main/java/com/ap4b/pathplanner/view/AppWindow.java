@@ -30,7 +30,7 @@ public class AppWindow {
     private PanelInformations panelInformations;
 
     private final int INFO_PANEL_WIDTH = 250;
-    private final int SPACE_BETWEEN_MAP_AND_PANEL = 35;
+    private final int SPACE_BETWEEN_MAP_AND_PANEL = 41;
 
     public AppWindow(Application app, Stage primaryStage) {
         this.app = app;
@@ -75,7 +75,7 @@ public class AppWindow {
 
         // Bind the size of the map and panelInformations to the size of the primaryStage
         map.getScrollPane().prefWidthProperty().bind(primaryStage.widthProperty().subtract(INFO_PANEL_WIDTH + SPACE_BETWEEN_MAP_AND_PANEL));
-        map.getScrollPane().prefHeightProperty().bind(primaryStage.heightProperty().subtract(63));
+        map.getScrollPane().prefHeightProperty().bind(primaryStage.heightProperty().subtract(64));
     }
 
     /**
