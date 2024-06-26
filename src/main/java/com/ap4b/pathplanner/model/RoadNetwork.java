@@ -29,6 +29,12 @@ public class RoadNetwork {
     private String imageFileName; // Image filename read from the XML
     private int connectionCount; // Number of possible connections between two points
 
+    private double scale;
+    private double mapScale;
+    private Point lambertTopLeft;
+    private Point lambertBottomRight;
+    private Point pixelsBottomRight;
+
     /**
      * Parses the XML file and initializes the road network.
      * @param xmlFile the XML file path
@@ -54,6 +60,28 @@ public class RoadNetwork {
 
             Element root = document.getDocumentElement();
             imageFileName = root.getAttribute("src");
+
+            // Process metadata
+            NodeList metadataElements = root.getElementsByTagName("metadata");
+            if (metadataElements.getLength() > 0) {
+                Element metadataElement = (Element) metadataElements.item(0);
+                scale = Double.parseDouble(metadataElement.getElementsByTagName("scale").item(0).getAttributes().getNamedItem("value").getNodeValue());
+                mapScale = Double.parseDouble(metadataElement.getElementsByTagName("mapScale").item(0).getAttributes().getNamedItem("value").getNodeValue());
+
+                Element lambertElement = (Element) metadataElement.getElementsByTagName("lambert").item(0);
+                double lambertTopLeftX = Double.parseDouble(lambertElement.getElementsByTagName("topLeft").item(0).getAttributes().getNamedItem("x").getNodeValue());
+                double lambertTopLeftY = Double.parseDouble(lambertElement.getElementsByTagName("topLeft").item(0).getAttributes().getNamedItem("y").getNodeValue());
+                lambertTopLeft = new Point((int) lambertTopLeftX, (int) lambertTopLeftY);
+
+                double lambertBottomRightX = Double.parseDouble(lambertElement.getElementsByTagName("bottomRight").item(0).getAttributes().getNamedItem("x").getNodeValue());
+                double lambertBottomRightY = Double.parseDouble(lambertElement.getElementsByTagName("bottomRight").item(0).getAttributes().getNamedItem("y").getNodeValue());
+                lambertBottomRight = new Point((int) lambertBottomRightX, (int) lambertBottomRightY);
+
+                Element pixelsElement = (Element) metadataElement.getElementsByTagName("pixels").item(0);
+                double pixelsBottomRightX = Double.parseDouble(pixelsElement.getElementsByTagName("bottomRight").item(0).getAttributes().getNamedItem("x").getNodeValue());
+                double pixelsBottomRightY = Double.parseDouble(pixelsElement.getElementsByTagName("bottomRight").item(0).getAttributes().getNamedItem("y").getNodeValue());
+                pixelsBottomRight = new Point((int) pixelsBottomRightX, (int) pixelsBottomRightY);
+            }
 
             // Process points
             NodeList pointElements = root.getElementsByTagName("points");
@@ -106,6 +134,27 @@ public class RoadNetwork {
             throw new RuntimeException(e);
         }
     }
+
+    public double getScale() {
+        return scale;
+    }
+
+    public double getMapScale() {
+        return mapScale;
+    }
+
+    public Point getLambertTopLeft() {
+        return lambertTopLeft;
+    }
+
+    public Point getLambertBottomRight() {
+        return lambertBottomRight;
+    }
+
+    public Point getPixelsBottomRight() {
+        return pixelsBottomRight;
+    }
+
 
     public Point getPoint(Integer num) {
         return points.get(num);

@@ -12,11 +12,12 @@ public class Application {
     // Constants
     private final String ImagesPath = "/com/ap4b/pathplanner/img/";
     private String mapLink;
-    private final double MAP_SCALE =18.388125; // 1.89 for the second map
+    private double scale; // 1 pixel = scale meters
+    private float mapScale; // Scale of the map compared to the original image
+    private Point lambertTopLeft;
+    private Point lambertBottomRight;
+    private Point pixelsBottomRight;
     private final float INITIAL_ZOOM = 0.5f;
-    private final Point LAMBERT_TOP_LEFT = new Point(897990, 2324046);
-    private final Point LAMBERT_BOTTOM_RIGHT = new Point(971518, 2272510);
-    private final Point PIXELS_BOTTOM_RIGHT = new Point(4000, 2801);
     public final static float ZOOM_NOTCH = (float) 0.05;
     private float zoomPercentage = INITIAL_ZOOM;
     private float oldZoom = -1;
@@ -45,9 +46,14 @@ public class Application {
         roadNetwork.parseXml(XmlPath);
 
         mapLink = ImagesPath + roadNetwork.getImageFileName();
+        scale = roadNetwork.getScale();
+        mapScale = (float) roadNetwork.getMapScale();
+        lambertTopLeft = roadNetwork.getLambertTopLeft();
+        lambertBottomRight = roadNetwork.getLambertBottomRight();
+        pixelsBottomRight = roadNetwork.getPixelsBottomRight();
 
         shortestPath = new ShortestPath();
-        shortestPath.init(roadNetwork, INITIAL_ZOOM);
+        shortestPath.init(roadNetwork, mapScale);
     }
 
     public void setAppWindow(AppWindow appWindow) {
@@ -292,16 +298,16 @@ public class Application {
      */
     public Point getLambertCoords(Point pt_pixels) {
         // Calculate the extent of the Lambert coordinates in x and y directions
-        int extentX = (int) (LAMBERT_BOTTOM_RIGHT.getX() - LAMBERT_TOP_LEFT.getX());
-        int extentY = (int) (LAMBERT_BOTTOM_RIGHT.getY() - LAMBERT_TOP_LEFT.getY());
+        int extentX = (int) (lambertBottomRight.getX() - lambertTopLeft.getX());
+        int extentY = (int) (lambertBottomRight.getY() - lambertTopLeft.getY());
 
         // Calculate the proportional Lambert coordinates based on the pixel coordinates
-        double lambertZeroX = (double) (pt_pixels.getX() * extentX) / PIXELS_BOTTOM_RIGHT.getX();
-        double lambertZeroY = (double) (pt_pixels.getY() * extentY) / PIXELS_BOTTOM_RIGHT.getY();
+        double lambertZeroX = (double) (pt_pixels.getX() * extentX) / pixelsBottomRight.getX();
+        double lambertZeroY = (double) (pt_pixels.getY() * extentY) / pixelsBottomRight.getY();
 
         // Convert to final Lambert coordinates by adding the top-left Lambert coordinates
-        int x = (int) (LAMBERT_TOP_LEFT.getX() + lambertZeroX);
-        int y = (int) (LAMBERT_TOP_LEFT.getY() + lambertZeroY);
+        int x = (int) (lambertTopLeft.getX() + lambertZeroX);
+        int y = (int) (lambertTopLeft.getY() + lambertZeroY);
 
         // Return the calculated Lambert coordinates as a new point
         return new Point(x, y);
@@ -392,12 +398,13 @@ public class Application {
 
 
     private String convertUnitDistance(double px, float zoom) {
-        double m = (double)(px * (double)MAP_SCALE * (double)((double)1 / (double)zoom));
+        double m = (double)(px * (double) scale * (double)((double)1 / (double)zoom));
+        String unit = (m > 1000) ? " km" : " m";
         if (m > 1000) {
             m /= 1000;
         }
         m = ((double) Math.round(m * 100)) / 100;
-        return String.valueOf(m);
+        return m + unit;
     }
 
     private String determineLeftRight(int id1, int id2, int id3) {
@@ -435,11 +442,19 @@ public class Application {
     }
 
     public void changeMap(String filePath){
+        roadNetwork = new RoadNetwork();
         roadNetwork.parseXml(filePath);
+
+        scale = roadNetwork.getScale();
+        mapScale = (float) roadNetwork.getMapScale();
+        lambertTopLeft = roadNetwork.getLambertTopLeft();
+        lambertBottomRight = roadNetwork.getLambertBottomRight();
+        pixelsBottomRight = roadNetwork.getPixelsBottomRight();
 
         this.mapLink = ImagesPath + roadNetwork.getImageFileName();
 
-        shortestPath.init(roadNetwork, INITIAL_ZOOM);
+        setZoomByValue(INITIAL_ZOOM);
+        shortestPath.init(roadNetwork, mapScale);
 
         appWindow.getDepartureArrivalPanel().resetCities();
         appWindow.getDepartureArrivalPanel().resetStreets(DepartureArrivalPanel.Direction.BOTH);

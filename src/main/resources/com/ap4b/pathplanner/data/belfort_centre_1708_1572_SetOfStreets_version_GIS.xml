@@ -1,5 +1,16 @@
 <?xml version="1.0"?>
 <carte ville="belfort centre" src="belfort_centre_1708_1572.bmp">
+	<metadata>
+		<scale value="1.89"/>
+		<mapScale value="1"/>
+		<lambert>
+			<topLeft x="937488" y="2305151"/>
+			<bottomRight x="940587" y="2301827"/>
+		</lambert>
+		<pixels>
+			<bottomRight x="1708" y="1572"/>
+		</pixels>
+	</metadata>
 	<ville nom="belfort centre">
 		<points>
 			<point num="2426" x="375.0" y="1052.0"></point>

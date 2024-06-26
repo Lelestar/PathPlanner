@@ -1,5 +1,16 @@
 <?xml version="1.0"?>
 <carte ville="aireurbaine" src="region_belfort_routes_fleuves_habitats.gif">
+	<metadata>
+		<scale value="18.388125"/>
+		<mapScale value="0.4"/>
+		<lambert>
+			<topLeft x="897990" y="2324046"/>
+			<bottomRight x="971518" y="2272510"/>
+		</lambert>
+		<pixels>
+			<bottomRight x="4000" y="2801"/>
+		</pixels>
+	</metadata>
 	<ville nom="aireurbaine">
 		<points>
 			<point num="130075" x="5354.0" y="2875.0"></point>

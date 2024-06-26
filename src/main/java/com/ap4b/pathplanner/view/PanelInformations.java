@@ -78,8 +78,8 @@ public class PanelInformations extends VBox {
             listInfos.getItems().add(message1);
         }
         listInfos.getItems().add("Systeme d'Unites : " + us);
-        if (!(pathLength == null || Double.parseDouble(pathLength)==0.00)){
-            listInfos.getItems().add("Longueur du trajet : "+ pathLength + us);
+        if (!(pathLength == null || pathLength.isEmpty())) {
+            listInfos.getItems().add("Longueur du trajet : "+ pathLength);
         }
     }
 

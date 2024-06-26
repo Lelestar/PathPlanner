@@ -161,6 +161,8 @@ public class ShortestPath {
     public int findNearestNode(Point pt) {
         // Find the closest node to the given point
         int idClosestNode = -1;
+        double bestX = -1;
+        double bestY = -1;
         double bestDistance = Double.MAX_VALUE;
         for (int i = 0; i < n; i++) {
             Node node = v[i];
@@ -169,6 +171,8 @@ public class ShortestPath {
             if (currentDistance < bestDistance) {
                 bestDistance = currentDistance;
                 idClosestNode = node.id;
+                bestX = node.x;
+                bestY = node.y;
             }
         }
         return idClosestNode;
@@ -197,7 +201,6 @@ public class ShortestPath {
             node.y = (int) (pt.getY() * z);
             v[i++] = node;
         }
-
         // Initialize edges
         i = 0;
         for (Iterator<String> f = res.getRoadsList().iterator(); f.hasNext(); ) {
