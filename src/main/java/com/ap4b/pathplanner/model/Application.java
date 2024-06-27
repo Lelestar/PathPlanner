@@ -3,6 +3,7 @@ package com.ap4b.pathplanner.model;
 import com.ap4b.pathplanner.view.AboutWindow;
 import com.ap4b.pathplanner.view.AppWindow;
 import com.ap4b.pathplanner.view.DepartureArrivalPanel;
+import com.ap4b.pathplanner.view.FileSelectionWindow;
 import javafx.scene.control.Alert;
 
 import java.util.*;
@@ -439,6 +440,16 @@ public class Application {
             cssPath = "/com/ap4b/pathplanner/style_dark.css";
         }
         new AboutWindow(cssPath);
+    }
+
+    public void handleMapChange() {
+        String cssPath;
+        if (themeIsLight) {
+            cssPath = "/com/ap4b/pathplanner/style_light.css";
+        } else {
+            cssPath = "/com/ap4b/pathplanner/style_dark.css";
+        }
+        FileSelectionWindow.display(this::changeMap, cssPath);
     }
 
     public void changeMap(String filePath){
