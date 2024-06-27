@@ -1,9 +1,6 @@
 package com.ap4b.pathplanner.view;
 
-import com.ap4b.pathplanner.controller.DepartureArrivalPanelController;
-import com.ap4b.pathplanner.controller.MapController;
-import com.ap4b.pathplanner.controller.MenuController;
-import com.ap4b.pathplanner.controller.ZoomController;
+import com.ap4b.pathplanner.controller.*;
 import com.ap4b.pathplanner.model.Application;
 import javafx.geometry.Bounds;
 import javafx.geometry.Pos;

@@ -1,6 +1,8 @@
 package com.ap4b.pathplanner.view;
 
 import com.ap4b.pathplanner.model.Point;
+import com.ap4b.pathplanner.model.Road;
+import com.ap4b.pathplanner.model.RoadNetwork;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ScrollPane;
@@ -11,7 +13,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import java.net.URI;
 import java.net.URL;
-import java.util.Vector;
+import java.util.*;
 
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.Scale;
@@ -25,11 +27,21 @@ public class Map extends Pane {
     private Canvas canvas;
     private ScrollPane scrollPane;
     private Vector<Point> itinerary = new Vector<>();
-
+    private Vector<Point> roadGraph = new Vector<>();
+    private Vector<Road> roadsGraph = new Vector<>();
+    private Vector<Point> newPoints = new Vector<>();
+    private Vector<Road> newStreets = new Vector<>();
+    private boolean inEditMode = false;
     private final Color START_COLOR = Color.GREEN;
     private final Color END_COLOR = Color.RED;
+    private final Color NEW_POINT_COLOR = Color.GOLD;
+    private final Color NEW_STREET_COLOR = Color.CYAN;
+    private final Color GRAPH_POINT_COLOR = Color.BROWN;
     private final Color ITINERARY_COLOR = Color.BLUE;
     private final Color POINT_COLOR = Color.BLACK;
+    private final Color GRAPH_COLOR = Color.GREY;
+    private RoadNetwork roadNetwork;
+
 
     private final int ITINERARY_WIDTH = 5;
     private final int POINT_SIZE = 15;
@@ -48,6 +60,7 @@ public class Map extends Pane {
     private final int SCALE_START_Y = 25;  // Distance from the top border
     private String scaleLabel = "";
     private int scaleSizePx = 0;
+
 
     /**
      * Constructs a Map instance with the specified image path.
@@ -142,30 +155,103 @@ public class Map extends Pane {
         }
 
         // Draw itinerary
-        if (itinerary.size() > 1) {
-            gc.setStroke(ITINERARY_COLOR);
-            gc.setLineWidth(adjustedItineraryWidth);
+        if(!inEditMode){
+            if (itinerary.size() > 1) {
+                gc.setStroke(ITINERARY_COLOR);
+                gc.setLineWidth(adjustedItineraryWidth);
 
-            Point prev = null;
-            for (Point pt : itinerary) {
-                if (prev != null) {
-                    gc.strokeLine(prev.getX(), prev.getY(), pt.getX(), pt.getY());
+                Point prev = null;
+                for (Point pt : itinerary) {
+                    if (prev != null) {
+                        gc.strokeLine(prev.getX(), prev.getY(), pt.getX(), pt.getY());
+                    }
+                    prev = pt;
                 }
-                prev = pt;
-            }
 
-            // Draw start and end points
-            drawPoint(gc, itinerary.firstElement(), START_COLOR, adjustedPointSize);
-            drawPoint(gc, itinerary.lastElement(), END_COLOR, adjustedPointSize);
-        }
-        else if (itinerary.size() == 1) {
-            if (itineraryUniquePointIsDeparturePoint) {
+                // Draw start and end points
                 drawPoint(gc, itinerary.firstElement(), START_COLOR, adjustedPointSize);
+                drawPoint(gc, itinerary.lastElement(), END_COLOR, adjustedPointSize);
             }
-            else {
-                drawPoint(gc, itinerary.firstElement(), END_COLOR, adjustedPointSize);
+            else if (itinerary.size() == 1) {
+                if (itineraryUniquePointIsDeparturePoint) {
+                    drawPoint(gc, itinerary.firstElement(), START_COLOR, adjustedPointSize);
+                }
+                else {
+                    drawPoint(gc, itinerary.firstElement(), END_COLOR, adjustedPointSize);
+                }
+            }
+        } else {
+            if(roadsGraph.size() > 0){
+                gc.setStroke(GRAPH_COLOR);
+                gc.setLineWidth(adjustedItineraryWidth);
+                for (Road rd : roadsGraph){
+                    Point prev = null;
+                    for (int i=0; i<rd.getNumberOfPoints(); i++) {
+                        Integer index = rd.getPoint(i);
+                        Point pt = roadNetwork.getPoint(index);
+                        if (prev != null) {
+                            gc.strokeLine(prev.getX(), prev.getY(), pt.getX(), pt.getY());
+                        }
+                        drawPoint(gc, pt, GRAPH_POINT_COLOR, adjustedPointSize);
+                        prev = pt;
+                    }
+                }
+
+                for (Point p : newPoints){
+                    drawPoint(gc, p, NEW_POINT_COLOR, adjustedPointSize);
+                }
+
+                gc.setStroke(NEW_STREET_COLOR);
+                gc.setLineWidth(adjustedItineraryWidth);
+                for (Road rd : newStreets){
+                    Point prev = null;
+                    for (int i=0; i<rd.getNumberOfPoints(); i++) {
+                        Integer index = rd.getPoint(i);
+                        Point pt = roadNetwork.getPoint(index);
+                        if(pt != null){
+                            if (prev != null) {
+                                gc.strokeLine(prev.getX(), prev.getY(), pt.getX(), pt.getY());
+                            }
+                            drawPoint(gc, pt, NEW_POINT_COLOR, adjustedPointSize);
+                            prev = pt;
+                        }
+                    }
+                }
+
+                if (itinerary.size() > 1) {
+                    gc.setStroke(ITINERARY_COLOR);
+                    gc.setLineWidth(adjustedItineraryWidth);
+
+                    Point prev = null;
+                    for (Point pt : itinerary) {
+                        if (prev != null) {
+                            gc.strokeLine(prev.getX(), prev.getY(), pt.getX(), pt.getY());
+                        }
+                        prev = pt;
+                    }
+
+                    // Draw start and end points
+                    drawPoint(gc, itinerary.firstElement(), START_COLOR, adjustedPointSize);
+                    drawPoint(gc, itinerary.lastElement(), END_COLOR, adjustedPointSize);
+                }
+
+
+            } else {
+                gc.setStroke(GRAPH_COLOR);
+                gc.setLineWidth(adjustedItineraryWidth);
+
+                Point prev = null;
+                for (Point pt : roadGraph) {
+                    if (prev != null) {
+                        gc.strokeLine(prev.getX(), prev.getY(), pt.getX(), pt.getY());
+                    }
+                    prev = pt;
+                }
+                drawPoint(gc, roadGraph.firstElement(), START_COLOR, adjustedPointSize);
+                drawPoint(gc, roadGraph.lastElement(), END_COLOR, adjustedPointSize);
             }
         }
+
 
         // Draw scale with fixed size
         drawScale(gc, scrollX, scrollY, zoomFactor);
@@ -391,5 +477,56 @@ public class Map extends Pane {
         scrollPane.setHvalue(newHValue);
         scrollPane.setVvalue(newVValue);
     }
+
+    public void removePoint(Point point) {
+        newPoints.remove(point);
+        roadGraph.remove(point);
+        draw();
+    }
+
+    public void addStreet(Vector<Point> points) {
+        Road newRoad = new Road(0);
+        for (Point pt : points){
+            Integer index = roadNetwork.getPointIndex(pt);
+            System.out.println(pt + " " + index);
+            newRoad.addPoint(index);
+        }
+        newStreets.add(newRoad);
+        draw();
+    }
+
+    public void addNewPoint(Point p){newPoints.add(p);}
+
+    public Vector<Point> getNewPoints(){return newPoints;}
+
+    public Vector<Point> getRoadGraph() {
+        return roadGraph;
+    }
+
+    public void switchEditMode(RoadNetwork roadNetwork) {
+        this.roadNetwork = roadNetwork;
+        inEditMode = !inEditMode;
+        if (inEditMode) {
+            roadGraph.clear();
+            roadsGraph.clear();
+            Set<String> roadsNames = roadNetwork.getRoadNames();
+            // For each road name, add the road points to the roadGraph
+            for (String roadName : roadsNames) {
+                Road road = roadNetwork.getRoad(roadName);
+                if (road != null) {
+                    for (Integer pointId : road.getPoints()) {
+                        Point point = roadNetwork.getPoint(pointId);
+                        if (point != null) {
+                            roadGraph.add(point);
+                        }
+                    }
+                    roadsGraph.add(road); // Add the road to roadsGraph
+                }
+            }
+        }
+        draw();
+    }
+
+
 }
 

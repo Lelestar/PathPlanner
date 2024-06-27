@@ -30,6 +30,7 @@ public class Application {
     private AppWindow appWindow;
 
     private boolean themeIsLight = true;
+    private boolean modeIsEdition = false;
 
     // Road Network
     private RoadNetwork roadNetwork;
@@ -490,6 +491,18 @@ public class Application {
             appWindow.getPrimaryStage().getScene().getStylesheets().add(Objects.requireNonNull(getClass().getResource("/com/ap4b/pathplanner/style_light.css")).toExternalForm());
             themeIsLight = true;
         }
+    }
+
+    public void switchMode(){
+        modeIsEdition = !modeIsEdition;
+    }
+
+    public RoadNetwork getRoadNetwork() {
+        return roadNetwork;
+    }
+
+    public boolean isModeIsEdition() {
+        return modeIsEdition;
     }
 
     public boolean getThemeIsLight() {

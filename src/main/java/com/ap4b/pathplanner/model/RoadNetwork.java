@@ -155,9 +155,19 @@ public class RoadNetwork {
         return pixelsBottomRight;
     }
 
-
     public Point getPoint(Integer num) {
         return points.get(num);
+    }
+
+    public Integer getPointIndex(Point p){
+        Integer index = null;
+        for (Integer i : getPointKeys()){
+            if( getPoint(i).getX() == p.getX() && getPoint(i).getY() == p.getY()){
+                index = i;
+                break;
+            }
+        }
+        return index;
     }
 
     public Set<Integer> getPointKeys() {
