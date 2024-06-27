@@ -15,26 +15,31 @@ public class MenuFX extends MenuBar {
     private final MenuItem about;
     private final MenuItem exit;
     private final MenuItem theme;
+    private final MenuItem controlsItem;
+    private final MenuItem mode;
+    private Menu fileMenu;
+    private Menu helpMenu;
 
     /**
      * Instantiates a new menu bar.
      */
     public MenuFX() {
         // Initialize Menus
-        Menu fileMenu = new Menu("File");
-        Menu helpMenu = new Menu("?");
+        fileMenu = new Menu("File");
+        helpMenu = new Menu("?");
 
         // Initialize Menu Items
         fileExportItinerary = new MenuItem("Export Itinerary");
         fileChangeMap = new MenuItem("Change Map");
         exit = new MenuItem("Exit");
         theme = new MenuItem("Switch Theme");
+        mode = new MenuItem("Mode Edition");
 
         // Add items to File Menu
-        fileMenu.getItems().addAll(fileExportItinerary, fileChangeMap, theme, exit);
+        fileMenu.getItems().addAll(fileExportItinerary, fileChangeMap, theme,mode, exit);
 
         // Initialize and set Help Menu Items
-        MenuItem controlsItem = new MenuItem("Controls");
+        controlsItem = new MenuItem("Controls");
         about = new MenuItem("About");
         helpMenu.getItems().addAll(controlsItem, about);
 
@@ -57,7 +62,7 @@ public class MenuFX extends MenuBar {
      * @return the menu items as an array
      */
     public MenuItem[] getMenuItems() {
-        return new MenuItem[]{fileExportItinerary, fileChangeMap, about, exit,theme};
+        return new MenuItem[]{fileExportItinerary, fileChangeMap, about, exit,theme,mode};
     }
 
     public MenuItem getChangeMapItem() {
@@ -73,4 +78,8 @@ public class MenuFX extends MenuBar {
     }
 
     public MenuItem getThemeItem() {return theme;}
+    public MenuItem getModeItem() {return mode;}
+    public void switchModeItem(String name_mode) {
+        mode.setText(name_mode);
+    }
 }

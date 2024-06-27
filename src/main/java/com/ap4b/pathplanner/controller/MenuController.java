@@ -50,6 +50,8 @@ public class MenuController implements EventHandler<ActionEvent> {
             handleExit();
         } else if (source == menu.getThemeItem()) {
             handleSwitchTheme();
+        } else if (source == menu.getModeItem()) {
+            handleSwitchMode();
         }
     }
 
@@ -81,5 +83,16 @@ public class MenuController implements EventHandler<ActionEvent> {
     private void handleSwitchTheme(){
         System.out.println("Switching Theme...");
         app.switchTheme();
+    }
+
+    private void handleSwitchMode(){
+        System.out.println("Switching Mode...");
+        app.switchMode();
+        appWindow.getMap().switchEditMode(app.getRoadNetwork());
+        if (app.isModeIsEdition()){
+            menu.switchModeItem("Mode Utilisation");
+        } else {
+            menu.switchModeItem("Mode Edition");
+        }
     }
 }
