@@ -70,7 +70,7 @@ public class MapController {
                     // Shift + click on an existing point -> remove point
                     map.removePoint(nearestPoint);
                 } else {
-                    map.addNewPoint(nearestPoint);
+                    map.addNewPoint(new Point((int) adjustedX, (int) adjustedY));
                 }
                 map.draw();
             } else if (event.isAltDown()) {
