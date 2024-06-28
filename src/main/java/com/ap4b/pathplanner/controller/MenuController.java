@@ -31,7 +31,6 @@ public class MenuController implements EventHandler<ActionEvent> {
 
     private void attachHandlers() {
         // Attach event handlers to each menu item
-        menu.getExportItem().setOnAction(this);
         for (MenuItem item : menu.getMenuItems()) {
             item.setOnAction(this);
         }
@@ -40,12 +39,12 @@ public class MenuController implements EventHandler<ActionEvent> {
     @Override
     public void handle(ActionEvent event) {
         Object source = event.getSource();
-        if (source == menu.getExportItem()) {
-            handleExportItinerary();
-        } else if (source == menu.getChangeMapItem()) {
+        if (source == menu.getChangeMapItem()) {
             handleChangeMap();
         } else if (source == menu.getAboutItem()) {
             handleAbout();
+        } else if (source == menu.getControlsItem()) {
+            handleControls();
         } else if (source == menu.getExitItem()) {
             handleExit();
         } else if (source == menu.getThemeItem()) {
@@ -55,11 +54,6 @@ public class MenuController implements EventHandler<ActionEvent> {
         }
     }
 
-    private void handleExportItinerary() {
-        System.out.println("Exporting Itinerary...");
-        // Add logic to export itinerary
-    }
-
     private void handleChangeMap() {
         app.handleMapChange();
     }
@@ -67,6 +61,11 @@ public class MenuController implements EventHandler<ActionEvent> {
     private void handleAbout() {
         System.out.println("Showing About Dialog...");
         app.about();
+    }
+
+    public void handleControls() {
+        System.out.println("Showing Controls Dialog...");
+        app.controls();
     }
 
     private void handleExit() {
@@ -84,9 +83,9 @@ public class MenuController implements EventHandler<ActionEvent> {
         app.switchMode();
         appWindow.getMap().switchEditMode(app.getRoadNetwork());
         if (app.isModeIsEdition()){
-            menu.switchModeItem("Mode Utilisation");
+            menu.switchModeItem("Use mode");
         } else {
-            menu.switchModeItem("Mode Edition");
+            menu.switchModeItem("Edit mode");
         }
     }
 }

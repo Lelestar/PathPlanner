@@ -10,7 +10,6 @@ import javafx.scene.control.MenuItem;
  */
 public class MenuFX extends MenuBar {
 
-    private final MenuItem fileExportItinerary;
     private final MenuItem fileChangeMap;
     private final MenuItem about;
     private final MenuItem exit;
@@ -29,14 +28,13 @@ public class MenuFX extends MenuBar {
         helpMenu = new Menu("?");
 
         // Initialize Menu Items
-        fileExportItinerary = new MenuItem("Export Itinerary");
         fileChangeMap = new MenuItem("Change Map");
         exit = new MenuItem("Exit");
         theme = new MenuItem("Switch Theme");
-        mode = new MenuItem("Mode Edition");
+        mode = new MenuItem("Edit mode");
 
         // Add items to File Menu
-        fileMenu.getItems().addAll(fileExportItinerary, fileChangeMap, theme,mode, exit);
+        fileMenu.getItems().addAll(fileChangeMap, theme,mode, exit);
 
         // Initialize and set Help Menu Items
         controlsItem = new MenuItem("Controls");
@@ -48,21 +46,12 @@ public class MenuFX extends MenuBar {
     }
 
     /**
-     * Gets the export item.
-     *
-     * @return the export item
-     */
-    public MenuItem getExportItem() {
-        return fileExportItinerary;
-    }
-
-    /**
      * Gets the menu items.
      *
      * @return the menu items as an array
      */
     public MenuItem[] getMenuItems() {
-        return new MenuItem[]{fileExportItinerary, fileChangeMap, about, exit,theme,mode};
+        return new MenuItem[]{fileChangeMap, about, controlsItem, exit,theme,mode};
     }
 
     public MenuItem getChangeMapItem() {
@@ -71,6 +60,10 @@ public class MenuFX extends MenuBar {
 
     public MenuItem getAboutItem() {
         return about;
+    }
+
+    public MenuItem getControlsItem() {
+        return controlsItem;
     }
 
     public MenuItem getExitItem() {
