@@ -51,87 +51,87 @@ public class RoadNetwork {
             if (resourceUrl == null) {
                 throw new IOException("Resource URL not found for: " + xmlFile);
             }
-            URI ressourceURI = resourceUrl.toURI();
 
-            // Parse the XML file
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            Document document = builder.parse(new File(ressourceURI));
+            // Open an InputStream to read the XML file
+            try (InputStream inputStream = resourceUrl.openStream()) {
+                // Parse the XML from the InputStream
+                DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+                DocumentBuilder builder = factory.newDocumentBuilder();
+                Document document = builder.parse(inputStream);
 
-            Element root = document.getDocumentElement();
-            imageFileName = root.getAttribute("src");
+                Element root = document.getDocumentElement();
+                imageFileName = root.getAttribute("src");
 
-            // Process metadata
-            NodeList metadataElements = root.getElementsByTagName("metadata");
-            if (metadataElements.getLength() > 0) {
-                Element metadataElement = (Element) metadataElements.item(0);
-                scale = Double.parseDouble(metadataElement.getElementsByTagName("scale").item(0).getAttributes().getNamedItem("value").getNodeValue());
-                mapScale = Double.parseDouble(metadataElement.getElementsByTagName("mapScale").item(0).getAttributes().getNamedItem("value").getNodeValue());
+                // Process metadata
+                NodeList metadataElements = root.getElementsByTagName("metadata");
+                if (metadataElements.getLength() > 0) {
+                    Element metadataElement = (Element) metadataElements.item(0);
+                    scale = Double.parseDouble(metadataElement.getElementsByTagName("scale").item(0).getAttributes().getNamedItem("value").getNodeValue());
+                    mapScale = Double.parseDouble(metadataElement.getElementsByTagName("mapScale").item(0).getAttributes().getNamedItem("value").getNodeValue());
 
-                Element lambertElement = (Element) metadataElement.getElementsByTagName("lambert").item(0);
-                double lambertTopLeftX = Double.parseDouble(lambertElement.getElementsByTagName("topLeft").item(0).getAttributes().getNamedItem("x").getNodeValue());
-                double lambertTopLeftY = Double.parseDouble(lambertElement.getElementsByTagName("topLeft").item(0).getAttributes().getNamedItem("y").getNodeValue());
-                lambertTopLeft = new Point((int) lambertTopLeftX, (int) lambertTopLeftY);
+                    Element lambertElement = (Element) metadataElement.getElementsByTagName("lambert").item(0);
+                    double lambertTopLeftX = Double.parseDouble(lambertElement.getElementsByTagName("topLeft").item(0).getAttributes().getNamedItem("x").getNodeValue());
+                    double lambertTopLeftY = Double.parseDouble(lambertElement.getElementsByTagName("topLeft").item(0).getAttributes().getNamedItem("y").getNodeValue());
+                    lambertTopLeft = new Point((int) lambertTopLeftX, (int) lambertTopLeftY);
 
-                double lambertBottomRightX = Double.parseDouble(lambertElement.getElementsByTagName("bottomRight").item(0).getAttributes().getNamedItem("x").getNodeValue());
-                double lambertBottomRightY = Double.parseDouble(lambertElement.getElementsByTagName("bottomRight").item(0).getAttributes().getNamedItem("y").getNodeValue());
-                lambertBottomRight = new Point((int) lambertBottomRightX, (int) lambertBottomRightY);
+                    double lambertBottomRightX = Double.parseDouble(lambertElement.getElementsByTagName("bottomRight").item(0).getAttributes().getNamedItem("x").getNodeValue());
+                    double lambertBottomRightY = Double.parseDouble(lambertElement.getElementsByTagName("bottomRight").item(0).getAttributes().getNamedItem("y").getNodeValue());
+                    lambertBottomRight = new Point((int) lambertBottomRightX, (int) lambertBottomRightY);
 
-                Element pixelsElement = (Element) metadataElement.getElementsByTagName("pixels").item(0);
-                double pixelsBottomRightX = Double.parseDouble(pixelsElement.getElementsByTagName("bottomRight").item(0).getAttributes().getNamedItem("x").getNodeValue());
-                double pixelsBottomRightY = Double.parseDouble(pixelsElement.getElementsByTagName("bottomRight").item(0).getAttributes().getNamedItem("y").getNodeValue());
-                pixelsBottomRight = new Point((int) pixelsBottomRightX, (int) pixelsBottomRightY);
-            }
-
-            // Process points
-            NodeList pointElements = root.getElementsByTagName("points");
-            for (int i = 0; i < pointElements.getLength(); i++) {
-                NodeList pointList = pointElements.item(i).getChildNodes();
-                for (int j = 0; j < pointList.getLength(); j++) {
-                    if ("point".equals(pointList.item(j).getNodeName())) {
-                        int num = Integer.parseInt(pointList.item(j).getAttributes().getNamedItem("num").getNodeValue());
-                        int x = (int) Double.parseDouble(pointList.item(j).getAttributes().getNamedItem("x").getNodeValue());
-                        int y = (int) Double.parseDouble(pointList.item(j).getAttributes().getNamedItem("y").getNodeValue());
-                        points.put(num, new Point(x, y));
-                    }
+                    Element pixelsElement = (Element) metadataElement.getElementsByTagName("pixels").item(0);
+                    double pixelsBottomRightX = Double.parseDouble(pixelsElement.getElementsByTagName("bottomRight").item(0).getAttributes().getNamedItem("x").getNodeValue());
+                    double pixelsBottomRightY = Double.parseDouble(pixelsElement.getElementsByTagName("bottomRight").item(0).getAttributes().getNamedItem("y").getNodeValue());
+                    pixelsBottomRight = new Point((int) pixelsBottomRightX, (int) pixelsBottomRightY);
                 }
-            }
 
-            // Process roads
-            NodeList roadElements = root.getElementsByTagName("rues");
-            for (int i = 0; i < roadElements.getLength(); i++) {
-                NodeList roadList = roadElements.item(i).getChildNodes();
-                for (int j = 0; j < roadList.getLength(); j++) {
-                    if ("rue".equals(roadList.item(j).getNodeName())) {
-                        String roadName = roadList.item(j).getAttributes().getNamedItem("nom").getNodeValue();
-                        roadName = Character.toUpperCase(roadName.charAt(0)) + roadName.substring(1);
-                        int direction = Integer.parseInt(roadList.item(j).getAttributes().getNamedItem("sens").getNodeValue());
-                        Road road = new Road(direction);
-
-                        NodeList pointNodes = roadList.item(j).getChildNodes();
-                        boolean firstPoint = true;
-                        for (int k = 0; k < pointNodes.getLength(); k++) {
-                            if ("pt".equals(pointNodes.item(k).getNodeName())) {
-                                road.addPoint(Integer.parseInt(pointNodes.item(k).getAttributes().getNamedItem("num").getNodeValue()));
-                                if (!firstPoint) {
-                                    connectionCount++;
-                                }
-                                firstPoint = false;
-                            }
+                // Process points
+                NodeList pointElements = root.getElementsByTagName("points");
+                for (int i = 0; i < pointElements.getLength(); i++) {
+                    NodeList pointList = pointElements.item(i).getChildNodes();
+                    for (int j = 0; j < pointList.getLength(); j++) {
+                        if ("point".equals(pointList.item(j).getNodeName())) {
+                            int num = Integer.parseInt(pointList.item(j).getAttributes().getNamedItem("num").getNodeValue());
+                            int x = (int) Double.parseDouble(pointList.item(j).getAttributes().getNamedItem("x").getNodeValue());
+                            int y = (int) Double.parseDouble(pointList.item(j).getAttributes().getNamedItem("y").getNodeValue());
+                            points.put(num, new Point(x, y));
                         }
-                        routes.put(roadName, road);
                     }
                 }
-            }
 
+                // Process roads
+                NodeList roadElements = root.getElementsByTagName("rues");
+                for (int i = 0; i < roadElements.getLength(); i++) {
+                    NodeList roadList = roadElements.item(i).getChildNodes();
+                    for (int j = 0; j < roadList.getLength(); j++) {
+                        if ("rue".equals(roadList.item(j).getNodeName())) {
+                            String roadName = roadList.item(j).getAttributes().getNamedItem("nom").getNodeValue();
+                            roadName = Character.toUpperCase(roadName.charAt(0)) + roadName.substring(1);
+                            int direction = Integer.parseInt(roadList.item(j).getAttributes().getNamedItem("sens").getNodeValue());
+                            Road road = new Road(direction);
+
+                            NodeList pointNodes = roadList.item(j).getChildNodes();
+                            boolean firstPoint = true;
+                            for (int k = 0; k < pointNodes.getLength(); k++) {
+                                if ("pt".equals(pointNodes.item(k).getNodeName())) {
+                                    road.addPoint(Integer.parseInt(pointNodes.item(k).getAttributes().getNamedItem("num").getNodeValue()));
+                                    if (!firstPoint) {
+                                        connectionCount++;
+                                    }
+                                    firstPoint = false;
+                                }
+                            }
+                            routes.put(roadName, road);
+                        }
+                    }
+                }
+
+            }
         } catch (ParserConfigurationException pce) {
             System.err.println("Parser configuration error");
         } catch (SAXException se) {
             System.err.println("Parsing error");
         } catch (IOException ie) {
             System.err.println("IO error");
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
         }
     }
 

@@ -9,9 +9,12 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
+import java.net.JarURLConnection;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Enumeration;
 import java.util.Objects;
+import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 public class FileSelectionWindow {
@@ -31,13 +34,16 @@ public class FileSelectionWindow {
             if (resource != null) {
                 if (resource.getProtocol().equals("jar")) {
                     // Running from a JAR file
-                    String jarPath = resource.getPath().substring(5, resource.getPath().indexOf("!"));
-                    try (JarFile jarFile = new JarFile(jarPath)) {
-                        jarFile.stream()
-                                .filter(e -> e.getName().startsWith("com/ap4b/pathplanner/data/") && e.getName().endsWith(".xml"))
-                                .forEach(e -> listView.getItems().add(new File(e.getName()).getName()));
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
+                    JarURLConnection jarConnection = (JarURLConnection) resource.openConnection();
+                    try (JarFile jarFile = jarConnection.getJarFile()) {
+                        Enumeration<JarEntry> entries = jarFile.entries();
+                        while (entries.hasMoreElements()) {
+                            JarEntry entry = entries.nextElement();
+                            String entryName = entry.getName();
+                            if (entryName.startsWith("com/ap4b/pathplanner/data/") && entryName.endsWith(".xml")) {
+                                listView.getItems().add(entryName.substring(entryName.lastIndexOf("/") + 1));
+                            }
+                        }
                     }
                 } else {
                     // Running from a directory
@@ -52,7 +58,7 @@ public class FileSelectionWindow {
             } else {
                 System.out.println("Resource URL not found for: " + DATA_PATH);
             }
-        } catch (URISyntaxException e) {
+        } catch (URISyntaxException | IOException e) {
             e.printStackTrace();
         }
 
