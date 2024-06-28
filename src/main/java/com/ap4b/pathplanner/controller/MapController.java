@@ -65,12 +65,13 @@ public class MapController {
 
         if (app.isModeIsEdition()) {
             if (event.isShiftDown()) {
-                Point nearestPoint = map.getNearestPoint();
-                if (map.getNewPoints().contains(map.getNearestPoint()) || map.getRoadGraph().contains(map.getNearestPoint())) {
+                Point clickedPoint = new Point((int) adjustedX, (int) adjustedY);
+                Point nearestPoint = findNearestPoint(clickedPoint, map.getRoadGraph(), map.getNewPoints(), 50.0);
+                if (nearestPoint != null) {
                     // Shift + click on an existing point -> remove point
                     map.removePoint(nearestPoint);
                 } else {
-                    map.addNewPoint(new Point((int) adjustedX, (int) adjustedY));
+                    map.addNewPoint(clickedPoint);
                 }
                 map.draw();
             } else if (event.isAltDown()) {
@@ -105,5 +106,38 @@ public class MapController {
                 app.setNearestPointAsStart();
             }
         }
+    }
+
+    /**
+     * Finds the nearest point to the specified point within the given tolerance.
+     * Searches both the roadGraph and newPoints collections.
+     *
+     * @param targetPoint The point to search around.
+     * @param roadGraph The collection of points in the road graph.
+     * @param newPoints The collection of new points.
+     * @param tolerance The distance tolerance to consider a point as "near".
+     * @return The nearest point if found within the tolerance, otherwise null.
+     */
+    private Point findNearestPoint(Point targetPoint, Vector<Point> roadGraph, Vector<Point> newPoints, double tolerance) {
+        Point nearestPoint = null;
+        double minDistance = Double.MAX_VALUE;
+
+        for (Point p : roadGraph) {
+            double distance = targetPoint.distance(p);
+            if (distance < minDistance && distance <= tolerance) {
+                minDistance = distance;
+                nearestPoint = p;
+            }
+        }
+
+        for (Point p : newPoints) {
+            double distance = targetPoint.distance(p);
+            if (distance < minDistance && distance <= tolerance) {
+                minDistance = distance;
+                nearestPoint = p;
+            }
+        }
+
+        return nearestPoint;
     }
 }
